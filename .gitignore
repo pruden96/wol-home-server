@@ -2,3 +2,4 @@
 admin.py
 test.py
 __pycache__/
+home_server.db
