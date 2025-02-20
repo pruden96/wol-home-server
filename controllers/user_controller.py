@@ -41,11 +41,11 @@ def register():
         if not form_validation:
             return render_template('register.html', error_user=error_user, error_email=error_email, error_pwd=error_pwd)
         
-        if not is_username_taken(username):
+        if is_username_taken(username):
             error_user='Nombre de usuario en uso'
             db_validation = False
 
-        if not is_email_taken(email):
+        if is_email_taken(email):
             error_email='Correo electrónico en uso'
             db_validation = False
 
