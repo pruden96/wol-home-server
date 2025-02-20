@@ -50,6 +50,7 @@ h2 {
     cursor: pointer;
     font-size: 16px;
     transition: background 0.2s ease;
+    width: 80%;
 }
 
 .wake-btn:hover {
@@ -92,7 +93,7 @@ button:hover {
 }
 
 /* Botón de agregar dispositivos */
-.add-device {
+.add-device, .add-user {
     display: block;
     margin: 20px auto;
     font-size: 24px;

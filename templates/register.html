@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+
+    <h2>Agregar Usuario</h2>
+
+    <form id="add-user-form" method="POST">
+        <input type="text" id="reg-username" placeholder="Nombre de usuario" name="new-username" required>
+        <span id="new-username-error" style="color: red;">{{ error_user }}</span><br>
+        <input type="password" id="reg-pwd" placeholder="Password" name="new-pwd" required>
+        <input type="password" id="reg-conf-pwd" placeholder="Confirm Password" name="new-conf-pwd" required>
+        <span id="conf-pwd-error" style="color: red;">{{ error_pwd }}</span><br>
+        <input type="text" id="reg-email" placeholder="Email" name="new-email" required>
+        <span id="email-error" style="color: red;">{{ error_email }}</span><br>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <a href="/">Volver</a>
+
+    <script type="module" src="../static/js/main.js"></script>
+</body>
+</html>

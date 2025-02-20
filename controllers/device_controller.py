@@ -1,7 +1,5 @@
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
 from models import get_devices_by_userid, insert_device, get_all_tags
-from flask import jsonify
-from flask import jsonify
 
 device_bp = Blueprint('device', __name__)
 
@@ -12,8 +10,9 @@ def dashboard():
         return redirect(url_for('auth.login'))
     
     user_id = session['user_id']
+    user_role = session['role']
     devices = get_devices_by_userid(user_id)
-    return render_template('index.html', devices=devices)
+    return render_template('index.html', devices=devices, role=user_role)
 
 # Ruta para agregar un dispositivo
 @device_bp.route('/add_device', methods=['GET', 'POST'])

@@ -86,6 +86,20 @@ document.addEventListener("DOMContentLoaded", function () {
             formatearCampo(this);
         });
     }
+
+    const usernameInput = document.getElementById("reg-username");
+    if(usernameInput) {
+        usernameInput.addEventListener("input", function() {
+            validarNombreUsuario(this);
+        });
+    }
+
+    const emailInput = document.getElementById("reg-email");
+    if(emailInput) {
+        emailInput.addEventListener("input", function() {
+            validarEmail(this);
+        });
+    }
 });
 
 function validarMAC(input) {
@@ -117,6 +131,47 @@ function formatearCampo(input) {
     valor = valor.toLowerCase(); // Convertir a minúsculas
     valor = valor.replace(/[^a-z0-9]/g, ''); // Eliminar caracteres no alfanuméricos
     input.value = valor;
+    input.setSelectionRange(cursorPos, cursorPos);
+}
+
+function validarNombreUsuario(input) {
+    let cursorPos = input.selectionStart; // Guardar posición del cursor
+    let username = input.value;
+    let error = document.getElementById("new-username-error"); // ID del elemento de error
+
+    // Expresión regular para validar el nombre de usuario
+    let regex = /^[a-zA-Z0-9_]{4,20}$/;
+
+    if (!regex.test(username)) {
+        error.textContent = "Nombre de usuario inválido. Debe tener entre 4 y 20 caracteres alfanuméricos o guiones bajos.";
+        input.setCustomValidity("Formato inválido"); // Para la validación del formulario
+    } else {
+        error.textContent = "";
+        input.setCustomValidity("");
+    }
+
+    input.value = username; // Actualizar el valor del input 
+    input.setSelectionRange(cursorPos, cursorPos); // Restablecer la posición del cursor
+}
+
+function validarEmail(input) {
+    let cursorPos = input.selectionStart;
+    let email = input.value;
+    let error = document.getElementById("email-error");
+
+    email = email.trim();
+
+    let regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
+    if (!regex.test(email)) {
+        error.textContent = "Formato de email inválido. Debe ser algo@exemplo.com";
+        input.setCustomValidity("Formato inválido");
+    } else {
+        error.textContent = "";
+        input.setCustomValidity("");
+    }
+
+    input.value = email;
     input.setSelectionRange(cursorPos, cursorPos);
 }
 

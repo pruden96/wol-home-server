@@ -24,6 +24,9 @@
     </div>
 
     <a href="/add_device" class="add-device">➕ Agregar Dispositivo</a>
+    {% if role == 'admin' %}
+    <a href="/register" class="add-user">➕ Agregar Usuario</a>
+    {% endif %}
     <button id="logout-button">Cerrar Sesión</button>
 
     <script type="module" src="../static/js/main.js"></script>
