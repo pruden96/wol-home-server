@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Dispositivos</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+
+    <h2>Mis Dispositivos</h2>
+
+    <div id="device-list">
+        {% for device in devices %}
+        <div class="card">
+            <span class="card-name">{{ device.name }}</span>
+            <button class="wake-btn"
+                    data-tag="{{ device.tag }}"
+                    data-name="{{ device.name }}">
+                Encender
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="/add_device" class="add-device">➕ Agregar Dispositivo</a>
+    <button id="logout-button">Cerrar Sesión</button>
+
+    <script type="module" src="../static/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Dispositivo</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+
+    <h2>Agregar un Dispositivo</h2>
+
+    <form id="device-form">
+        <input type="text" id="device-name" placeholder="Nombre del dispositivo" name="name" value="{{ name if name is not none else '' }}" required>
+        <input type="text" id="device-mac" placeholder="MAC Address: XX:XX:XX:XX:XX:XX" name="mac" value="{{ mac if mac is not none else ''}}" required>
+        <span id="errorMAC" style="color: red;"></span><br><br>
+        <input type="text" id="device-tag" placeholder="TAG" name="tag" required>
+        <div id="error-tag">
+              <span id="error-tag-text" style="color: red;"></span><br><br>
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a href="/">Volver</a>
+
+    <script type="module" src="../static/js/main.js"></script>
+</body>
+</html>
