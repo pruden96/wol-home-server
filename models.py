@@ -87,7 +87,7 @@ def get_all_tags() -> list:
         with get_db_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('SELECT tag FROM devices')
-            return {row[0] for row in cursor.fetchall()} or None
+            return {row[0] for row in cursor.fetchall()}
     except sqlite3.Error as e:
         logging.error(f"Database error: {e}")
 
@@ -110,7 +110,7 @@ def insert_device(user_id: int, name: str, tag: str, mac: str) -> None:
     except sqlite3.Error as e:
         logging.error(f"Database error: {e}")
 
-def remove_device(tag: str) -> None:
+def remove_device_by_tag(tag: str) -> None:
     """ Remove a device """
     try:
         with get_db_connection() as conn:

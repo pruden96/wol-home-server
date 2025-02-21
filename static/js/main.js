@@ -1,4 +1,4 @@
-import { addDevice, logout, wakeDevice, login } from "./api.js";
+import { addDevice, logout, wakeDevice, login, removeDevice } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -100,6 +100,37 @@ document.addEventListener("DOMContentLoaded", function () {
             validarEmail(this);
         });
     }
+
+    document.querySelectorAll('.remove-device').forEach((button) => {
+        button.addEventListener('click', function() {
+            const deviceTag = this.getAttribute('data-tag');
+            const deviceName = this.getAttribute('data-name');
+
+            // Mostrar el popup
+            const popup = document.getElementById('pop-up-confirmacion');
+            document.getElementById('mensaje-confirmacion').textContent = `¿Estás seguro que deseas eliminar este elemento: ${deviceName}?`;
+            popup.style.display = 'flex';
+
+            // Configurar el botón de confirmar para este dispositivo
+            document.getElementById('boton-confirmar').onclick = async function () {
+                console.log(`Eliminar dispositivo: ${deviceName} (${deviceTag})`);
+                try {
+                    await removeDevice(deviceTag, deviceName);
+                    popup.style.display = 'none';
+                    window.location.reload()
+                } catch (error) {
+                    alert(`Error al eliminar el dispositivo: ${error.message}`);
+                }
+            };
+
+            // Configurar el botón de cancelar
+            document.getElementById('boton-cancelar').onclick = function () {
+                popup.style.display = 'none';
+            };
+
+        });
+    });
+
 });
 
 function validarMAC(input) {

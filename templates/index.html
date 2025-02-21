@@ -19,8 +19,22 @@
                     data-name="{{ device.name }}">
                 Encender
             </button>
+            <button class="remove-device"
+                    id="delete-device"
+                    data-tag="{{ device.tag }}"
+                    data-name="{{ device.name }}">
+                ❌
+            </button>
         </div>
         {% endfor %}
+    </div>
+
+    <div id="pop-up-confirmacion" style="display: none;">
+        <div class="contenido-pop-up">
+            <p id="mensaje-confirmacion"></p>
+            <button id="boton-confirmar">Sí, eliminar</button>
+            <button id="boton-cancelar">No, cancelar</button>
+        </div>
     </div>
 
     <a href="/add_device" class="add-device">➕ Agregar Dispositivo</a>

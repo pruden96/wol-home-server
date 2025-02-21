@@ -85,4 +85,21 @@ async function logout() {
     }
 }
 
-export { login, addDevice, wakeDevice, logout };
+async function removeDevice(tag, name) {
+    try {
+        const queryParams = `?tag=${tag}&name=${name}`;
+        const endpoint = '/remove_device' + queryParams;
+
+        const response = await fetch(endpoint, { method: 'DELETE' });
+        if (response.status === 204) {
+            return { success: true };
+        } else {
+            const data = await handleResponse(response);
+            return data;
+        }
+    } catch (error) {
+        throw new Error(`Error al eliminar el dispositivo: ${error.message}`);
+    }
+}
+
+export { login, addDevice, wakeDevice, logout, removeDevice };
