@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 macContainer.style.display = "block";
                 ipContainer.style.display = "none";
             } else if (selectedType === "camera") {
+                ipInput.required = true;
                 macInput.disabled = true;
                 ipInput.disabled = false;
                 macContainer.style.display = "none";
