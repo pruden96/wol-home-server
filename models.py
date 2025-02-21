@@ -81,6 +81,16 @@ def get_user_by_email(email: str) -> tuple:
 
 # <--------------- devices table --------------->
 
+def update_device_name_by_tag(tag: str, name: str) -> None:
+    """ Update device name by tag """
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('UPDATE devices SET name = ? WHERE tag = ?', (name, tag))
+            conn.commit()
+    except sqlite3.Error as e:
+        logging.error(f"Database error: {e}")
+
 def get_all_tags() -> list:
     """ Get all tags from devices table """
     try:

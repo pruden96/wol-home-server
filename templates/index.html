@@ -12,8 +12,9 @@
 
     <div id="device-list">
         {% for device in devices %}
-        <div class="card">
+        <div class="card" data-tag="{{ device.tag }}" data-name="{{ device.name }}">
             <span class="card-name">{{ device.name }}</span>
+            <button class="options-btn" data-tag="{{ device.tag }}">⋮</button>
             <button class="wake-btn"
                     data-tag="{{ device.tag }}"
                     data-name="{{ device.name }}">
@@ -27,6 +28,17 @@
             </button>
         </div>
         {% endfor %}
+    </div>
+
+    <div id="pop-up-name-edit" style="display: none;">
+        <div class="name-edit-container">
+            <p>Inserte el nuevo nombre del dispositivo</p>
+            <input type="text" placeholder="Nuevo nombre del dispositivo" id="edited-name" required>
+            <div id="buttons-name-edit-container">
+                <button id="save-name-btn">Guardar</button>
+                <button id="cancel-name-btn">Cancelar</button>
+            </div>
+        </div>
     </div>
 
     <div id="pop-up-confirmacion" style="display: none;">

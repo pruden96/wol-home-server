@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
-from models import get_devices_by_userid, insert_device, get_all_tags, remove_device_by_tag
+from models import get_devices_by_userid, insert_device, get_all_tags, remove_device_by_tag, update_device_name_by_tag
+import logging
+
 
 device_bp = Blueprint('device', __name__)
 
@@ -58,3 +60,20 @@ def remove_device():
     
     remove_device_by_tag(tag)
     return '', 204
+
+@device_bp.route('/update_device_name', methods=['PUT'])
+def update_device_name():
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login'))
+
+    data = request.get_json()
+    if data is None:
+        return jsonify({'error': 'No se proporcionaron datos JSON'}), 400
+    name = data.get('name')
+    tag = data.get('tag')
+    if name is None or tag is None:
+        return jsonify({'error': 'Name or Tag missing'}), 400
+    print(f"Name: {name}, Tag: {tag}")
+    update_device_name_by_tag(tag, name)
+    return jsonify({'success': True}), 200
+

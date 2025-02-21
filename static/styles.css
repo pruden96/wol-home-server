@@ -64,6 +64,21 @@ h2 {
     width: 60%;
 }
 
+.options-btn {
+    color: #ffffff;
+    background-color: rgba(255, 0, 0, 0);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+    width: 1%;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+}
+
 .card button:last-child {
     margin-left: 20px; /* Espacio a la izquierda del segundo botón */
   }
@@ -182,7 +197,7 @@ button#delete-device {
 }
   
 /* Corrección del pop-up */
-#pop-up-confirmacion {
+#pop-up-confirmacion, #pop-up-name-edit {
     position: fixed; /* Para evitar que se mueva con el contenido */
     top: 50%;
     left: 50%;
@@ -197,6 +212,7 @@ button#delete-device {
 }
 
 .contenido-pop-up {
+    width: 80%;
     background-color: #242323;
     color: #ffffff;
     padding: 20px;
@@ -219,5 +235,39 @@ button#delete-device {
 }
 
 .contenido-pop-up button:hover {
+    background-color: #777;
+}
+
+.name-edit-container {
+    width: 80%;
+    background-color: #242323;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+#buttons-name-edit-container {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+#buttons-name-edit-container button {
+    width: 200px; /* Mismo ancho para ambos botones */
+    text-align: center;
+    display: block;
+    margin: 5px 0; /* Espaciado uniforme entre los botones */
+}
+
+#buttons-name-edit-container button:hover {
     background-color: #777;
 }

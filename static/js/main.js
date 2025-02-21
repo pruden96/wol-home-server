@@ -1,4 +1,4 @@
-import { addDevice, logout, wakeDevice, login, removeDevice } from "./api.js";
+import { addDevice, logout, wakeDevice, login, removeDevice, updateDeviceName } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -101,35 +101,115 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    document.querySelectorAll('.remove-device').forEach((button) => {
-        button.addEventListener('click', function() {
-            const deviceTag = this.getAttribute('data-tag');
-            const deviceName = this.getAttribute('data-name');
-
-            // Mostrar el popup
-            const popup = document.getElementById('pop-up-confirmacion');
-            document.getElementById('mensaje-confirmacion').textContent = `¿Estás seguro que deseas eliminar este elemento: ${deviceName}?`;
-            popup.style.display = 'flex';
-
-            // Configurar el botón de confirmar para este dispositivo
-            document.getElementById('boton-confirmar').onclick = async function () {
-                console.log(`Eliminar dispositivo: ${deviceName} (${deviceTag})`);
-                try {
-                    await removeDevice(deviceTag, deviceName);
+    const removeDeviceBtn = document.querySelectorAll('.remove-device');
+    if (removeDeviceBtn) {
+        removeDeviceBtn.forEach((button) => {
+            button.addEventListener('click', function() {
+                const deviceTag = this.getAttribute('data-tag');
+                const deviceName = this.getAttribute('data-name');
+    
+                // Mostrar el popup
+                const popup = document.getElementById('pop-up-confirmacion');
+                document.getElementById('mensaje-confirmacion').textContent = `¿Estás seguro que deseas eliminar este elemento: ${deviceName}?`;
+                popup.style.display = 'flex';
+    
+                // Configurar el botón de confirmar para este dispositivo
+                document.getElementById('boton-confirmar').onclick = async function () {
+                    console.log(`Eliminar dispositivo: ${deviceName} (${deviceTag})`);
+                    try {
+                        await removeDevice(deviceTag, deviceName);
+                        popup.style.display = 'none';
+                        window.location.reload()
+                    } catch (error) {
+                        alert(`Error al eliminar el dispositivo: ${error.message}`);
+                    }
+                };
+    
+                // Configurar el botón de cancelar
+                document.getElementById('boton-cancelar').onclick = function () {
                     popup.style.display = 'none';
-                    window.location.reload()
-                } catch (error) {
-                    alert(`Error al eliminar el dispositivo: ${error.message}`);
-                }
-            };
-
-            // Configurar el botón de cancelar
-            document.getElementById('boton-cancelar').onclick = function () {
-                popup.style.display = 'none';
-            };
-
+                };
+    
+            });
         });
-    });
+    }
+    
+
+    const deviceTypeSelector = document.getElementById("device-type");
+    if (deviceTypeSelector) {
+        deviceTypeSelector.addEventListener("change", function() {
+            const selectedType = this.value;
+            const macInput = document.getElementById("device-mac");
+            const ipInput = document.getElementById("device-ip");
+            const macContainer = document.getElementById("mac-container");
+            const ipContainer = document.getElementById("ip-container");
+    
+            if (selectedType === "wol") {
+                macInput.disabled = false;
+                ipInput.disabled = true;
+                macContainer.style.display = "block";
+                ipContainer.style.display = "none";
+            } else if (selectedType === "camera") {
+                macInput.disabled = true;
+                ipInput.disabled = false;
+                macContainer.style.display = "none";
+                ipContainer.style.display = "block";
+            }
+        });
+    }
+    
+
+    const optionsButtons = document.querySelectorAll('.options-btn');
+    if (optionsButtons) {
+        optionsButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation(); // Evita conflictos con otros eventos
+                console.log('clickeado!');
+                const nameEditPopup = document.getElementById('pop-up-name-edit');
+                const editedName = document.getElementById('edited-name');
+    
+                const card = button.closest('.card'); // Encuentra la card padre
+                const deviceNameSpan = card.getAttribute('data-name'); // Obtiene el nombre del dispositivo
+    
+                nameEditPopup.style.display = 'flex';
+                editedName.disabled = false;
+                editedName.value = deviceNameSpan;
+    
+                // Guardamos el tag del dispositivo
+                editedName.setAttribute('data-tag', card.getAttribute('data-tag'));
+                const saveNameBtn = document.getElementById('save-name-btn');
+                const cancelNameBtn = document.getElementById('cancel-name-btn');
+                console.log(`Nombre del dispositivo: ${deviceNameSpan}`);
+                saveNameBtn.addEventListener('click', async function() {
+                    const newName = editedName.value;
+                    const deviceTag = editedName.getAttribute('data-tag');
+                    try {
+                        await updateDeviceName(deviceTag, newName);
+                        console.log(`Actualizar nombre del dispositivo: ${deviceTag} a ${newName}`)
+                        // Buscamos el dispositivo correspondiente en la lista y actualizamos su nombre
+                        document.querySelectorAll('.card').forEach(card => {
+                            if (card.getAttribute('data-tag') === deviceTag) {
+                                const deviceNameSpan = card.querySelector('.card-name');
+                                deviceNameSpan.textContent = newName;
+                            }
+                        });
+                        nameEditPopup.style.display = 'none';
+                        editedName.disabled = true;
+                        editedName.removeAttribute('data-tag');
+                        //window.location.reload()
+                    } catch (error) {
+                        alert(`Error al actualizar el nombre del dispositivo: ${error.message}`);
+                    }  
+                });
+    
+                cancelNameBtn.addEventListener('click', function() {
+                    nameEditPopup.style.display = 'none';
+                    editedName.disabled = true;
+                    editedName.removeAttribute('data-tag');
+                });
+            });
+        });
+    }
 
 });
 

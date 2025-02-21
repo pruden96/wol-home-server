@@ -102,4 +102,18 @@ async function removeDevice(tag, name) {
     }
 }
 
-export { login, addDevice, wakeDevice, logout, removeDevice };
+async function updateDeviceName(tag, name) {
+    try {
+        const response = await fetch('/update_device_name', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag, name })
+        });
+        const data = await handleResponse(response);
+        return data;
+    } catch (error) {
+        throw new Error(`Error al actualizar el nombre del dispositivo: ${error.message}`);
+    }  
+}
+
+export { login, addDevice, wakeDevice, logout, removeDevice, updateDeviceName };
