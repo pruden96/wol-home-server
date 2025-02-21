@@ -212,7 +212,28 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const ipInputField = document.getElementById("device-ip");
+    if (ipInputField) {
+        ipInputField.addEventListener("input", function() {
+            validarIP(this.value)
+        });
+    }
+
 });
+
+function validarIP(input) {
+    const ip = input;
+    const error = document.getElementById("errorIP");
+    const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+    if (!ipRegex.test(ip)) {
+        error.textContent = "Formato de dirección IP inválido. Debe ser XXX.XXX.XXX.XXX";
+        this.setCustomValidity("Formato inválido");
+    } else {
+        error.textContent = "";
+        this.setCustomValidity("");
+    }
+}
 
 function validarMAC(input) {
     let cursorPos = input.selectionStart; // Guardar posición del cursor

@@ -24,11 +24,13 @@
         <div id="error-tag">
             <span id="error-tag-text" style="color: red;"></span><br>
         </div>
-        <label for="device-type">Tipo de dispositivo</label>
-        <select id="device-type">
-            <option value="wol">Wake On LAN</option>
-            <option value="camera">Camera</option>
-        </select>
+        <div id="type-container" style="display: none;">
+            <label for="device-type">Tipo de dispositivo</label>
+            <select id="device-type">
+                <option value="wol">Wake On LAN</option>
+                <option value="camera">Camera</option>
+            </select>
+        </div>
         <button type="submit">Guardar</button>
     </form>
 
