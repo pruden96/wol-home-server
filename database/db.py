@@ -15,10 +15,13 @@ def create_db():
     c.execute('''CREATE TABLE IF NOT EXISTS devices (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
-                    mac TEXT NOT NULL,
                     tag TEXT NOT NULL UNIQUE,
+                    mac TEXT,
+                    ip TEXT,
+                    type TEXT NOT NULL,
                     user_id INTEGER NOT NULL,
-                    FOREIGN KEY (user_id) REFERENCES users(id)
+                    FOREIGN KEY (user_id) REFERENCES users(id),
+                    CHECK (mac IS NOT NULL OR ip IS NOT NULL)
                 )''')
 
     conn.commit()

@@ -1,7 +1,8 @@
 // Función para manejar errores de respuesta
 async function handleResponse(response) {
     if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw errorData;
     }
     return response.json();
 }
@@ -21,23 +22,24 @@ async function login({ username, password }) {
         }
 
         const data = await handleResponse(response);
-
-        if (data && !data.success) {
-            alert(data.message);
-        }
-        // return data;
     } catch (error) {
-        throw new Error(`Error al iniciar sesión: ${error.message}`);
+        throw error;
     }
 }
 
 // Función para agregar un dispositivo
-async function addDevice({ name, mac, tag }) {
+async function addDevice({ name, mac, tag, ip, type }) {
+    if (mac === undefined || mac === '') {
+        mac = 'none'
+    }
+    if (ip === undefined || ip === '') {
+        ip = 'none'
+    }
     try {
         const response = await fetch('/add_device', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, mac, tag })
+            body: JSON.stringify({ name, mac, tag, ip, type })
         });
 
         if(response.redirected) {
@@ -47,9 +49,6 @@ async function addDevice({ name, mac, tag }) {
 
         const data = await handleResponse(response);
 
-        /*if (data && !data.success) {
-            throw new Error(data.message);
-        }*/
         return data;
     } catch (error) {
         throw error;
@@ -67,7 +66,7 @@ async function wakeDevice(tag, name) {
 
         // return data;
     } catch (error) {
-        throw new Error(`Error al encender el dispositivo: ${error.message}`);
+        throw error;
     }
 }
 
@@ -98,7 +97,7 @@ async function removeDevice(tag, name) {
             return data;
         }
     } catch (error) {
-        throw new Error(`Error al eliminar el dispositivo: ${error.message}`);
+        throw error;
     }
 }
 
@@ -112,7 +111,7 @@ async function updateDeviceName(tag, name) {
         const data = await handleResponse(response);
         return data;
     } catch (error) {
-        throw new Error(`Error al actualizar el nombre del dispositivo: ${error.message}`);
+        throw error;
     }  
 }
 

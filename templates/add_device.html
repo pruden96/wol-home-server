@@ -14,21 +14,22 @@
         <input type="text" id="device-name" placeholder="Nombre del dispositivo" name="name" value="{{ name if name is not none else '' }}" required>
         <div id="mac-container">
             <input type="text" id="device-mac" placeholder="MAC Address: XX:XX:XX:XX:XX:XX" name="mac" value="{{ mac if mac is not none else ''}}" required>
-            <span id="errorMAC" style="color: red;"></span><br>
+            <span id="errorMAC" style="color: red;"></span><br><br>
         </div>
         <div id="ip-container" style="display: none;">
             <input type="text" id="device-ip" placeholder="IP Address: XXX.XXX.XXX.XXX" name="ip" value="{{ ip if ip is not none else ''}}">
-            <span id="errorIP" style="color: red;"></span><br>
+            <span id="errorIP" style="color: red;"></span><br><br>
         </div>
         <input type="text" id="device-tag" placeholder="TAG" name="tag" required>
         <div id="error-tag">
-            <span id="error-tag-text" style="color: red;"></span><br>
+            <span id="error-tag-text" style="color: red;"></span><br><br>
         </div>
-        <div id="type-container" style="display: none;">
+        <div id="type-container" style="display: block;">
             <label for="device-type">Tipo de dispositivo</label>
             <select id="device-type">
                 <option value="wol">Wake On LAN</option>
                 <option value="camera">Camera</option>
+                <option value="on-off">On - Off Device</option>
             </select>
         </div>
         <button type="submit">Guardar</button>

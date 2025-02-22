@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
-from models import get_devices_by_userid, insert_device, get_all_tags, remove_device_by_tag, update_device_name_by_tag
+from models import get_devices_by_userid, insert_device, get_all_tags, remove_device_by_tag, update_device_name_by_tag, get_device_tag, get_device_mac, get_device_ip
 import logging
 
 
@@ -21,13 +21,13 @@ def dashboard():
 def add_device():
     name = None
     mac = None
+    ip = None
+
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
 
     if request.method == 'POST':
-
-        tags = get_all_tags()
-
+        
         data = request.get_json()
         if data is None:
             return jsonify({'error': 'No se proporcionaron datos JSON'}), 400
@@ -35,18 +35,35 @@ def add_device():
         name = data.get('name')
         tag = data.get('tag')
         mac = data.get('mac')
+        if mac == 'none':
+            mac = None
+        ip = data.get('ip')
+        if ip == 'none':
+            ip = None
+        type = data.get('type')
         user_id = session['user_id']
-        
+
+        tag_fetched = get_device_tag(tag)
         # Verificar que el tag esté permitido (debe ser uno de los tags predefinidos)
-        if tag in tags:
+        if tag_fetched is not None:
             # print('tag repetido')
             return jsonify({'error_tag': 'Tag en uso. Seleccione otro'}), 400
-        else:
-            # Insertar dispositivo en la base de datos
-            insert_device(user_id, name, tag, mac)
-            return redirect(url_for('device.dashboard'))
+        
+        mac_fetched = get_device_mac(mac, user_id)
+        if mac_fetched is not None:
+            # print('mac repetido')
+            return jsonify({'error_mac': 'MAC en uso. Seleccione otro'}), 400
+        
+        ip_fetched = get_device_ip(ip, user_id)
+        if ip_fetched is not None:
+            # print('ip repetido')
+            return jsonify({'error_ip': 'IP en uso. Seleccione otro'}), 400
+
+        # Insertar dispositivo en la base de datos
+        insert_device(user_id, name, tag, type, mac=mac, ip=ip)
+        return redirect(url_for('device.dashboard'))
     
-    return render_template('add_device.html', name=name, mac=mac)
+    return render_template('add_device.html', name=name, mac=mac, ip=ip)
 
 @device_bp.route('/remove_device', methods=['DELETE'])
 def remove_device():
@@ -72,8 +89,8 @@ def update_device_name():
     name = data.get('name')
     tag = data.get('tag')
     if name is None or tag is None:
-        return jsonify({'error': 'Name or Tag missing'}), 400
-    print(f"Name: {name}, Tag: {tag}")
+        return jsonify({'error_tag_name': 'Name or Tag missing'}), 400
+    # print(f"Name: {name}, Tag: {tag}")
     update_device_name_by_tag(tag, name)
     return jsonify({'success': True}), 200
 

@@ -9,7 +9,7 @@ def login():
     if request.method == 'POST':
         data = request.get_json()
         if data is None:
-            return jsonify({'error': "No se proporcionaron datos JSON"}), 404
+            return jsonify({'error': "No se proporcionaron datos JSON"}), 400
         
         username = data.get('username')
         password = data.get('password')
@@ -20,11 +20,14 @@ def login():
             session['role'] = user['role']
             return redirect(url_for('device.dashboard'))
         else:
-            return jsonify({'error': "Credenciales incorrectas"}), 401
+            return jsonify({'error_auth': "Credenciales incorrectas"}), 401
     return render_template('login.html')
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login'))
+    
     session.pop('user_id', None)
     session.clear()
     response = redirect(url_for('auth.login'))

@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 deviceData[key] = value;
             });
 
+            const deviceTypeSelector = document.getElementById('device-type');
+            const typeSelected = deviceTypeSelector.value;
+            deviceData['type'] = typeSelected;
+
             try {
                 const response = await addDevice(deviceData)
                 if (response.success){
@@ -22,7 +26,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     deviceForm.reset();
                 }
             } catch (error){
-                document.getElementById("error-tag-text").textContent = 'Tag en uso. Seleccione otro.';
+                const errorKeys = Object.keys(error);
+                console.log(errorKeys);
+                switch (errorKeys[0]){
+                    case 'error_mac':
+                        document.getElementById("errorMAC").textContent = 'Dirección MAC en uso. Ingrese otra.';
+                        break;
+                    case 'error_tag':
+                        document.getElementById("error-tag-text").textContent = 'Tag en uso. Seleccione otro.';
+                        break;
+                    case 'error_ip':
+                        document.getElementById("errorIP").textContent = 'Dirección IP en uso. Ingrese otra.';
+                        break;
+                    case 'error':
+                        alert("Error al agregar el dispositivo. No se proporcionaron datos suficientes");
+                        break;
+                }
+                //document.getElementById("error-tag-text").textContent = 'Tag en uso. Seleccione otro.';
             }
         });
     }
@@ -42,7 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 await login(loginData)
             } catch (error){
-                alert("EROR DE AUTENTICACIÓN:" + error.message);
+                if (error.error) {
+                    alert("Error al iniciar sesión: " + error.error)
+                } else if (error.error.auth) {
+                    alert("Error de autenticación. " + error.error.auth)
+                }
             }
         });
     }
@@ -67,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 try {
                     await wakeDevice(deviceTag, deviceName);
                 } catch (error) {
-                    alert(`Error al encender el dispositivo: ${error.message}`);
+                    alert(`Error al encender el dispositivo. ${error.message}`);
                 }
             });
         });
@@ -121,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         popup.style.display = 'none';
                         window.location.reload()
                     } catch (error) {
-                        alert(`Error al eliminar el dispositivo: ${error.message}`);
+                        alert(`Error al eliminar el dispositivo. ${error.error}`);
                     }
                 };
     
@@ -149,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ipInput.disabled = true;
                 macContainer.style.display = "block";
                 ipContainer.style.display = "none";
-            } else if (selectedType === "camera") {
+            } else if (selectedType === "camera" || selectedType === "on-off") {
                 ipInput.required = true;
                 macInput.disabled = true;
                 ipInput.disabled = false;
@@ -199,7 +223,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         editedName.removeAttribute('data-tag');
                         //window.location.reload()
                     } catch (error) {
-                        alert(`Error al actualizar el nombre del dispositivo: ${error.message}`);
+                        if (error.error_tag_name) {
+                            alert(`Error al actualizar el nombre del dispositivo: ${error.error_tag_name}`);
+                        } else if (error.error) {
+                            alert(`Error al actualizar el nombre del dispositivo: ${error.error}`)
+                        }
                     }  
                 });
     

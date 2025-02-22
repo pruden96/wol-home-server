@@ -101,6 +101,16 @@ def get_all_tags() -> list:
     except sqlite3.Error as e:
         logging.error(f"Database error: {e}")
 
+def get_device_tag(tag: str) -> str:
+    """ Get device tag """
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            device_tag = cursor.execute('SELECT tag FROM devices WHERE tag = ?', (tag, )).fetchone()
+            return device_tag[0] if device_tag else None
+    except sqlite3.Error as e:
+        logging.error(f"Database error: {e}")
+
 def get_devices_by_userid(user_id: int) -> list:
     """ Get all devices from a user """
     try:
@@ -110,12 +120,12 @@ def get_devices_by_userid(user_id: int) -> list:
     except sqlite3.Error as e:
         logging.error(f"Database error: {e}")
 
-def insert_device(user_id: int, name: str, tag: str, mac: str) -> None:
+def insert_device(user_id: int, name: str, tag: str, type: str, mac: str=None, ip: str=None) -> None:
     """ Insert a new device """
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute('INSERT INTO devices (user_id, name, mac, tag) VALUES (?, ?, ?, ?)', (user_id, name, mac, tag))
+            cursor.execute('INSERT INTO devices (user_id, name, tag, mac, ip, type) VALUES (?, ?, ?, ?, ?, ?)', (user_id, name, tag, mac, ip, type))
             conn.commit()
     except sqlite3.Error as e:
         logging.error(f"Database error: {e}")
@@ -137,5 +147,25 @@ def get_mac_by_tag(tag: str) -> str:
             cursor = conn.cursor()
             mac = cursor.execute('SELECT mac FROM devices WHERE tag = ?', (tag,)).fetchone()
             return mac[0] if mac else None
+    except sqlite3.Error as e:
+        logging.error(f"Database error: {e}")
+
+def get_device_mac(mac: str, user_id: int) -> str:
+    """ Get device MAC address """
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            device_mac = cursor.execute('SELECT mac FROM devices WHERE mac = ? and user_id = ?', (mac, user_id)).fetchone()
+            return device_mac[0] if device_mac else None
+    except sqlite3.Error as e:
+        logging.error(f"Database error: {e}")
+
+def get_device_ip(ip: str, user_id: int) -> str:
+    """ Get device IP address """
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            device_ip = cursor.execute('SELECT ip FROM devices WHERE ip = ? and user_id = ?', (ip, user_id)).fetchone()
+            return device_ip[0] if device_ip else None
     except sqlite3.Error as e:
         logging.error(f"Database error: {e}")

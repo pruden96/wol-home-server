@@ -11,6 +11,7 @@ def register():
         
     if session['role'] != 'admin':
         return redirect(url_for('device.dashboard'))
+    
     if request.method == 'POST':
 
         error_user = ''
