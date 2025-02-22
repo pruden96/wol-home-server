@@ -30,13 +30,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log(errorKeys);
                 switch (errorKeys[0]){
                     case 'error_mac':
-                        document.getElementById("errorMAC").textContent = 'Dirección MAC en uso. Ingrese otra.';
+                        document.getElementById("errorMAC").textContent = error.error_mac;
                         break;
                     case 'error_tag':
-                        document.getElementById("error-tag-text").textContent = 'Tag en uso. Seleccione otro.';
+                        document.getElementById("error-tag-text").textContent = error.error_tag;
                         break;
                     case 'error_ip':
-                        document.getElementById("errorIP").textContent = 'Dirección IP en uso. Ingrese otra.';
+                        document.getElementById("errorIP").textContent = error.error_ip;
                         break;
                     case 'error':
                         alert("Error al agregar el dispositivo. No se proporcionaron datos suficientes");
@@ -173,12 +173,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 ipInput.disabled = true;
                 macContainer.style.display = "block";
                 ipContainer.style.display = "none";
-            } else if (selectedType === "camera" || selectedType === "on-off") {
+            } else {
                 ipInput.required = true;
                 macInput.disabled = true;
                 ipInput.disabled = false;
                 macContainer.style.display = "none";
                 ipContainer.style.display = "block";
+            }
+            if (selectedType === "camera-usb") {
+                ipInput.placeholder = "ID de Cámara USB [0-3]";
             }
         });
     }
@@ -189,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
         optionsButtons.forEach(button => {
             button.addEventListener('click', function(event) {
                 event.stopPropagation(); // Evita conflictos con otros eventos
-                console.log('clickeado!');
+                // console.log('clickeado!');
                 const nameEditPopup = document.getElementById('pop-up-name-edit');
                 const editedName = document.getElementById('edited-name');
     
@@ -243,19 +246,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const ipInputField = document.getElementById("device-ip");
     if (ipInputField) {
         ipInputField.addEventListener("input", function() {
-            validarIP(this.value)
+            validarIP(this.value, deviceTypeSelector.value)
         });
     }
 
 });
 
-function validarIP(input) {
+function validarIP(input, type) {
     const ip = input;
     const error = document.getElementById("errorIP");
     const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-
-    if (!ipRegex.test(ip)) {
-        error.textContent = "Formato de dirección IP inválido. Debe ser XXX.XXX.XXX.XXX";
+    const cameraIdRegex = /^([0-3])$/;
+    if ((type === "camera-usb" && !cameraIdRegex.test(ip)) || (type !== "camera-usb" && !ipRegex.test(ip))) {
+        error.textContent = type === "camera-usb" 
+            ? "Formato de dirección ID inválido. Debe ser [0-3]" 
+            : "Formato de dirección IP inválido. Debe ser XXX.XXX.XXX.XXX";
         this.setCustomValidity("Formato inválido");
     } else {
         error.textContent = "";

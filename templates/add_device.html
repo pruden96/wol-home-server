@@ -17,21 +17,24 @@
             <span id="errorMAC" style="color: red;"></span><br><br>
         </div>
         <div id="ip-container" style="display: none;">
-            <input type="text" id="device-ip" placeholder="IP Address: XXX.XXX.XXX.XXX" name="ip" value="{{ ip if ip is not none else ''}}">
+            <input type="text" id="device-ip" placeholder="IP Address: XXX.XXX.XXX.XXX" name="ip" value="{{ ip if ip is not none else ''}}" data-role="{{ role }}">
             <span id="errorIP" style="color: red;"></span><br><br>
         </div>
         <input type="text" id="device-tag" placeholder="TAG" name="tag" required>
         <div id="error-tag">
             <span id="error-tag-text" style="color: red;"></span><br><br>
         </div>
+        {% if role == 'admin' %}
         <div id="type-container" style="display: block;">
             <label for="device-type">Tipo de dispositivo</label>
             <select id="device-type">
                 <option value="wol">Wake On LAN</option>
                 <option value="camera">Camera</option>
                 <option value="on-off">On - Off Device</option>
+                <option value="camera-usb">Camera USB</option>
             </select>
         </div>
+        {% endif %}
         <button type="submit">Guardar</button>
     </form>
 

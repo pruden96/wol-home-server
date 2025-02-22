@@ -64,6 +64,18 @@ h2 {
     width: 60%;
 }
 
+.play-btn {
+    background-color: #00c853;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+    width: 60%;
+}
+
 .options-btn {
     color: #ffffff;
     background-color: rgba(255, 0, 0, 0);
@@ -86,6 +98,11 @@ h2 {
 .wake-btn:hover {
     background-color: #00e676;
 }
+
+.play-btn:hover {
+    background-color: #00e676;
+}
+
 
 /* Formularios */
 form {

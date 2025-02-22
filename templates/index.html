@@ -15,11 +15,20 @@
         <div class="card" data-tag="{{ device.tag }}" data-name="{{ device.name }}">
             <span class="card-name">{{ device.name }}</span>
             <button class="options-btn" data-tag="{{ device.tag }}">⋮</button>
+            {% if devices.type == 'wol'%}
             <button class="wake-btn"
                     data-tag="{{ device.tag }}"
                     data-name="{{ device.name }}">
                 Encender
             </button>
+            {% endif %}
+            {% if device.type == 'camera-usb' or device.type == 'camera'%}
+            <button class="play-btn"
+                    data-tag="{{ device.tag }}"
+                    data-name="{{ device.name }}">
+                ▶️ VER
+            </button>
+            {% endif %}
             <button class="remove-device"
                     id="delete-device"
                     data-tag="{{ device.tag }}"

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
 from models import get_devices_by_userid, insert_device, get_all_tags, remove_device_by_tag, update_device_name_by_tag, get_device_tag, get_device_mac, get_device_ip
+from validators.device_validator import validate_device_name, validate_device_tag
 import logging
 
 
@@ -25,6 +26,7 @@ def add_device():
 
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
+    user_role = session['role']
 
     if request.method == 'POST':
         
@@ -63,7 +65,7 @@ def add_device():
         insert_device(user_id, name, tag, type, mac=mac, ip=ip)
         return redirect(url_for('device.dashboard'))
     
-    return render_template('add_device.html', name=name, mac=mac, ip=ip)
+    return render_template('add_device.html', name=name, mac=mac, ip=ip, role=user_role)
 
 @device_bp.route('/remove_device', methods=['DELETE'])
 def remove_device():
