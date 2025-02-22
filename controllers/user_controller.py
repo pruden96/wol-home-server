@@ -6,17 +6,16 @@ user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    if 'user_id' not in session:
+            return redirect(url_for('auth.login'))
+        
+    if session['role'] != 'admin':
+        return redirect(url_for('device.dashboard'))
     if request.method == 'POST':
 
         error_user = ''
         error_email = ''
         error_pwd = ''
-
-        if 'user_id' not in session:
-            return redirect(url_for('auth.login'))
-        
-        if session['role'] != 'admin':
-            return redirect(url_for('device.dashboard'))
         
         form_validation = True
         db_validation = True
