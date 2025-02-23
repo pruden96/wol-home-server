@@ -3,6 +3,7 @@ from controllers.auth_controller import auth_bp
 from controllers.device_controller import device_bp
 from controllers.wol_controller import wol_bp
 from controllers.user_controller import user_bp
+from controllers.camera_controller import camera_bp
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -18,5 +19,6 @@ def create_app():
     app.register_blueprint(device_bp)
     app.register_blueprint(wol_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(camera_bp)
 
     return app

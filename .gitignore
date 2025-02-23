@@ -3,5 +3,3 @@ admin.py
 test.py
 __pycache__/
 home_server.db
-services/
-camera_controller.py

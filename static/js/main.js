@@ -1,4 +1,4 @@
-import { addDevice, logout, wakeDevice, login, removeDevice, updateDeviceName } from "./api.js";
+import { addDevice, logout, wakeDevice, login, removeDevice, updateDeviceName, stopStreaming} from "./api.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -94,6 +94,41 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert(`Error al encender el dispositivo. ${error.message}`);
                 }
             });
+        });
+    }
+
+    // Seleccion de los botones de "VER" para abrir un pop-up de streaming de la cámara
+    const playStreamingButtons = document.querySelectorAll('.play-btn')
+    if (playStreamingButtons) {
+        playStreamingButtons.forEach(button => {
+            let popup;
+            let videoPlayer;
+            let deviceId;
+            button.addEventListener('click', function(event) {
+                const deviceName = event.target.getAttribute('data-name');
+                deviceId = event.target.getAttribute('data-id');
+                const streamingUrl = `/stream/${deviceId}`;
+                const deviceNameElement = document.getElementById('streaming-device');
+                popup = document.getElementById('pop-up-streaming');
+                videoPlayer = document.getElementById('video-player');
+                deviceNameElement.textContent = deviceName;
+                videoPlayer.src = streamingUrl;
+                popup.style.display = 'flex';
+            });
+
+            const closeStreamingBtn = document.getElementById("close-streaming-btn");
+            if (closeStreamingBtn) {
+                closeStreamingBtn.addEventListener("click", async function() {
+                    videoPlayer.src = "";
+                    popup.style.display = "none";
+                    try {
+                        await stopStreaming(deviceId);
+                    } catch (error) {
+                        alert(`Error al terminar el streaming. ${error.error}`);
+                    }
+
+                });
+            }
         });
     }
 

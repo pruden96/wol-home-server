@@ -9,7 +9,7 @@ body {
 }
 
 /* Encabezados */
-h2 {
+h1, h2 {
     color: #ffffff;
 }
 
@@ -52,19 +52,7 @@ h2 {
 
 }
 /* Botón "Encender" */
-.wake-btn {
-    background-color: #00c853;
-    color: #ffffff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s ease;
-    width: 60%;
-}
-
-.play-btn {
+.wake-btn, .play-btn {
     background-color: #00c853;
     color: #ffffff;
     border: none;
@@ -214,7 +202,7 @@ button#delete-device {
 }
   
 /* Corrección del pop-up */
-#pop-up-confirmacion, #pop-up-name-edit {
+.pop-up {
     position: fixed; /* Para evitar que se mueva con el contenido */
     top: 50%;
     left: 50%;
@@ -228,7 +216,7 @@ button#delete-device {
     z-index: 1000; /* Asegura que esté por encima de otros elementos */
 }
 
-.contenido-pop-up {
+.popup-content-container {
     width: 80%;
     background-color: #242323;
     color: #ffffff;
@@ -243,48 +231,38 @@ button#delete-device {
     gap: 15px;
 }
 
-/* Alinear los botones debajo uno del otro con el mismo ancho y completamente alineados */
-.contenido-pop-up button {
-    width: 300px; /* Mismo ancho para ambos botones */
-    text-align: center;
-    display: block;
-    margin: 5px 0; /* Espaciado uniforme entre los botones */
-}
-
-.contenido-pop-up button:hover {
-    background-color: #777;
-}
-
-.name-edit-container {
-    width: 80%;
-    background-color: #242323;
-    color: #ffffff;
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-#buttons-name-edit-container {
+.buttons-container {
     width: 80%;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 30px;
 }
 
-#buttons-name-edit-container button {
+.buttons-container #buttons-name-edit-container {
+    flex-direction: row;
+}
+
+.buttons-container #confirmation-buttons-container {
+    flex-direction: column;
+}
+
+#buttons-name-edit-container button, #confirmation-buttons-container button {
     width: 200px; /* Mismo ancho para ambos botones */
     text-align: center;
     display: block;
     margin: 5px 0; /* Espaciado uniforme entre los botones */
 }
 
-#buttons-name-edit-container button:hover {
+#buttons-name-edit-container button:hover, #confirmation-buttons-container button:hover {
     background-color: #777;
 }
+
+#video-player {
+    width: 90%; /* Ocupa el 90% del contenedor */
+    max-width: 100%; /* Asegura que no se desborde */
+    height: auto; /* Mantiene la proporción */
+    display: block; /* Elimina espacios extra en imágenes */
+    margin: 0 auto; /* Centra horizontalmente */
+}
+

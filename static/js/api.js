@@ -115,4 +115,18 @@ async function updateDeviceName(tag, name) {
     }  
 }
 
-export { login, addDevice, wakeDevice, logout, removeDevice, updateDeviceName };
+// Solicitud de terminar streaming y liberacion de recurso de camara
+async function stopStreaming(deviceId) {
+    try {
+        const response = await fetch(`/release/${deviceId}`, { method: 'POST' });
+        if (response.status === 200) {
+            return { success: true };
+        } else {
+            await handleResponse(response);
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export { login, addDevice, wakeDevice, logout, removeDevice, updateDeviceName, stopStreaming };

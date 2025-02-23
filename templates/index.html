@@ -25,7 +25,8 @@
             {% if device.type == 'camera-usb' or device.type == 'camera'%}
             <button class="play-btn"
                     data-tag="{{ device.tag }}"
-                    data-name="{{ device.name }}">
+                    data-name="{{ device.name }}"
+                    data-id="{{ device.ip }}">
                 ▶️ VER
             </button>
             {% endif %}
@@ -39,22 +40,34 @@
         {% endfor %}
     </div>
 
-    <div id="pop-up-name-edit" style="display: none;">
-        <div class="name-edit-container">
+    <div class="pop-up" id="pop-up-streaming" style="display: none;">
+        <div class="popup-content-container">
+            <h1 id="streaming-device"><!-- Se inserta desde main.js --></h1>
+            <img id="video-player" src="https://media.kasperskycontenthub.com/wp-content/uploads/sites/103/2021/10/14162918/rickroll-e1634243370645.jpg" width="640" height="480">
+            <div class="buttons-container" id="streaming-button-container">
+                <button id="close-streaming-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pop-up" id="pop-up-name-edit" style="display: none;">
+        <div class="popup-content-container">
             <p>Inserte el nuevo nombre del dispositivo</p>
             <input type="text" placeholder="Nuevo nombre del dispositivo" id="edited-name" required>
-            <div id="buttons-name-edit-container">
+            <div class="buttons-container" id="buttons-name-edit-container">
                 <button id="save-name-btn">Guardar</button>
                 <button id="cancel-name-btn">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <div id="pop-up-confirmacion" style="display: none;">
-        <div class="contenido-pop-up">
-            <p id="mensaje-confirmacion"></p>
-            <button id="boton-confirmar">Sí, eliminar</button>
-            <button id="boton-cancelar">No, cancelar</button>
+    <div class="pop-up" id="pop-up-confirmacion" style="display: none;">
+        <div class="popup-content-container"> <!-- confirmation-popup-container -->
+            <p id="mensaje-confirmacion"><!-- Se inserta desde main.js --></p>
+            <div class="buttons-container" id="confirmation-buttons-container">
+                <button id="boton-confirmar">Sí, eliminar</button>
+                <button id="boton-cancelar">No, cancelar</button>
+            </div>
         </div>
     </div>
 
