@@ -60,12 +60,12 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     
             try {
-                await login(loginData)
+                await login(loginData);
             } catch (error){
-                if (error.error) {
-                    alert("Error al iniciar sesión: " + error.error)
-                } else if (error.error.auth) {
-                    alert("Error de autenticación. " + error.error.auth)
+                if (error.error_auth) {
+                    alert("Error de autenticación: " + error.error_auth);
+                } else {
+                    alert("Error al iniciar sesión: " + JSON.stringify(error));
                 }
             }
         });

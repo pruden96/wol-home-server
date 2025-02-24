@@ -15,7 +15,7 @@
         <div class="card" data-tag="{{ device.tag }}" data-name="{{ device.name }}">
             <span class="card-name">{{ device.name }}</span>
             <button class="options-btn" data-tag="{{ device.tag }}">⋮</button>
-            {% if devices.type == 'wol'%}
+            {% if device.type == 'wol'%}
             <button class="wake-btn"
                     data-tag="{{ device.tag }}"
                     data-name="{{ device.name }}">
