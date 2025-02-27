@@ -1,5 +1,7 @@
 import sqlite3
 
+from models import hash_password
+
 
 def create_db() -> None:
     conn = sqlite3.connect("database/home_server.db")
@@ -24,6 +26,20 @@ def create_db() -> None:
                     FOREIGN KEY (user_id) REFERENCES users(id),
                     CHECK (mac IS NOT NULL OR ip IS NOT NULL)
                 )""")
+    # FIXTURE WITH TEST DATA
+    # Insertar usuarios de prueba
+    # Notar que estamos usando contraseñas simples para fines de prueba, cambia a algo seguro en un entorno real
+    users = [
+        ("admin", hash_password("admin"), "admin@example.com", "admin"),
+        ("user", hash_password("user"), "user@example.com", "user"),
+    ]
+
+    # Insertar usuarios en la tabla
+    c.executemany(
+        """INSERT INTO users (username, password, email, role)
+                VALUES (?, ?, ?, ?)""",
+        users,
+    )
 
     conn.commit()
     conn.close()
