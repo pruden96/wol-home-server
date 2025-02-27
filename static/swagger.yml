@@ -1,0 +1,425 @@
+openapi: 3.0.0
+info:
+  title: API de Gestión de Dispositivos Wake On LAN (WoL)
+  description: API de Gestión de Dispositivos Wake On LAN (WoL) y otros del hogar
+  version: 1.0.0
+
+paths:
+  /login:
+    get:
+      summary: Renderiza página de login
+      tags:
+        - Autenticación
+      description: Renderiza la página de inicio de sesión
+      responses:
+        "200":
+          description: Render login page
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Verifica credenciales y crea una sesión
+      tags:
+        - Autenticación
+      description: Inicia sesión con usuario y contraseña
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "admin"
+                password:
+                  type: string
+                  example: "admin1234"
+      responses:
+        "302":
+          description: Redirección al dashboard
+        "400":
+          description: Faltan datos JSON
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No se proporcionaron datos JSON"
+        "401":
+          description: Credenciales incorrectas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_auth:
+                    type: string
+                    example: "Credenciales incorrectas"
+
+  /logout:
+    post:
+      summary: Cerrar sesión
+      tags:
+        - Autenticación
+      description: Termina la sesión del usuario actual
+      responses:
+        "302":
+          description: Redirección al login
+        "401":
+          description: No existe sesión activa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No hay sesión activa"
+
+  /register:
+    get:
+      summary: Renderiza la página de registro
+      tags:
+        - Autenticación
+      description: Renderiza la página de registro (solo para administradores)
+      responses:
+        "200":
+          description: Página de registro
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Registrar un nuevo usuario
+      tags:
+        - Autenticación
+      description: Registra un nuevo usuario (solo para administradores)
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                new-username:
+                  type: string
+                  example: "nuevoUsuario"
+                  description: Nombre de usuario del nuevo usuario
+                new-pwd:
+                  type: string
+                  example: "ContraseñaSegura"
+                  description: Contraseña del nuevo usuario
+                new-conf-pwd:
+                  type: string
+                  example: "ContraseñaSegura"
+                  description: Confirmación de la contraseña del nuevo usuario
+                new-email:
+                  type: string
+                  example: "nuevo@correo.com"
+                  description: Correo electrónico del nuevo usuario
+              required:
+                - new-username
+                - new-pwd
+                - new-conf-pwd
+                - new-email
+      responses:
+        "302":
+          description: Redirección al dashboard si el registro es exitoso
+        "400":
+          description: Renderiza página de registro con errores de validación
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /add_device:
+    get:
+      summary: Renderiza el formulario para agregar un nuevo dispositivo
+      tags:
+        - Dispositivos
+      responses:
+        "200":
+          description: Página de añadir dispositivo
+        "302":
+          description: Redirección al login si no está autenticado
+    post:
+      summary: Crear un nuevo dispositivo
+      tags:
+        - Dispositivos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Nombre del dispositivo
+                ip_address:
+                  type: string
+                  description: Dirección IP del dispositivo
+                mac_address:
+                  type: string
+                  description: Dirección MAC del dispositivo
+                device_type:
+                  type: string
+                  description: Tipo de dispositivo
+              required:
+                - name
+                - device_type
+      responses:
+        "302":
+          description: Redirección al dashboard si es exitoso
+        "400":
+          description: Datos inválidos
+
+  /remove_device:
+    delete:
+      summary: Eliminar un dispositivo
+      tags:
+        - Dispositivos
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Nombre del dispositivo a eliminar
+        - name: tag
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Identificador único del dispositivo
+      responses:
+        "204":
+          description: Dispositivo eliminado con éxito
+        "400":
+          description: Parámetros faltantes
+
+  /update_device_name:
+    put:
+      summary: Update the name of an existing device
+      description: Update a device name from the system using its name and tag identifiers
+      tags:
+        - Dispositivos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the device
+                tag:
+                  type: string
+                  description: Unique tag identifier of the device
+              required:
+                - name
+                - tag
+      responses:
+        "200":
+          description: Device's name successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: "True"
+        "400":
+          description: Bad request - missing required parameters
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        description: "No se proporcionaron datos JSON"
+                  - type: object
+                    properties:
+                      error_tag_name:
+                        type: string
+                        description: "Name or Tag missing"
+  
+  /:
+    get:
+      summary: Display device dashboard
+      description: Renders the dashboard page showing all devices associated with the authenticated user
+      tags:
+        - Dispositivos
+      responses:
+        "200":
+          description: Successfully renders the dashboard
+          content:
+            text/html:
+              schema:
+                type: string
+        "302":
+          description: Redirect to login page if user is not authenticated
+
+  /wake:
+    post:
+      description: "Envía un paquete WOL a un dispositivo específico."
+      tags:
+        - Wake-on-LAN
+      parameters:
+        - name: tag
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Tag único del dispositivo a despertar."
+          example: "dispositivo1"
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Nombre del dispositivo a despertar."
+          example: "MiPC"
+      responses:
+        "200":
+          description: "Paquete WOL enviado con éxito."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Packet WOL enviado a MiPC (00:11:22:33:44:55)"
+        "400":
+          description: "Parámetros faltantes o inválidos."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "error"
+                  message:
+                    type: string
+                    example: "Se requiere el parámetro 'tag'."
+        "404":
+          description: "MAC no encontrada para el dispositivo."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "error"
+                  message:
+                    type: string
+                    example: "MAC no encontrada"
+        "500":
+          description: "Error interno del servidor."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "error"
+                  message:
+                    type: string
+                    example: "Error al enviar el paquete WOL: [Mensaje de error]"
+        "302":
+          description: "Redirección a la página de inicio de sesión si el usuario no está autenticado."
+          content:
+            text/html:
+              schema:
+                type: string
+  /stream/{camera_id}:
+    get:
+      summary: Stream camera feed
+      description: Returns a continuous stream of camera frames using multipart response
+      tags:
+        - Camera
+      parameters:
+        - in: path
+          name: camera_id
+          schema:
+            type: integer
+            minimum: 0
+          required: true
+          description: Numeric ID of the camera to stream
+      responses:
+        "200":
+          description: Camera stream
+          content:
+            multipart/x-mixed-replace:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Camera not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /release/{camera_id}:
+    post:
+      summary: Release camera resources
+      description: Stops the camera stream and releases associated resources
+      tags:
+        - Camera
+      parameters:
+        - in: path
+          name: camera_id
+          schema:
+            type: integer
+            minimum: 0
+          required: true
+          description: Numeric ID of the camera to release
+      responses:
+        "200":
+          description: Camera successfully released
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Cámara 0 liberada"
+        "404":
+          description: Camera not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cámara no encontrada"

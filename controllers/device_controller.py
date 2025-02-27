@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, Response
 from models import get_devices_by_userid, insert_device, get_all_tags, remove_device_by_tag, update_device_name_by_tag, get_device_tag, get_device_mac, get_device_ip
 from validators.device_validator import validate_device_name, validate_device_tag
 import logging
@@ -8,7 +8,8 @@ device_bp = Blueprint('device', __name__)
 
 # Ruta para dashboard
 @device_bp.route('/')
-def dashboard():
+def dashboard() -> str:
+    
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
     
@@ -19,7 +20,8 @@ def dashboard():
 
 # Ruta para agregar un dispositivo
 @device_bp.route('/add_device', methods=['GET', 'POST'])
-def add_device():
+def add_device() -> str | Response:
+    
     name = None
     mac = None
     ip = None
@@ -68,7 +70,8 @@ def add_device():
     return render_template('add_device.html', name=name, mac=mac, ip=ip, role=user_role)
 
 @device_bp.route('/remove_device', methods=['DELETE'])
-def remove_device():
+def remove_device() -> Response:
+    
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
 
@@ -81,7 +84,8 @@ def remove_device():
     return '', 204
 
 @device_bp.route('/update_device_name', methods=['PUT'])
-def update_device_name():
+def update_device_name() -> Response:
+    
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
 

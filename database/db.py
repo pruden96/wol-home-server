@@ -1,6 +1,6 @@
 import sqlite3
 
-def create_db():
+def create_db() -> None:
     conn = sqlite3.connect('database/home_server.db')
     c = conn.cursor()
 

@@ -3,7 +3,7 @@ from services.camera_service import Camera_USB, cameras, active_streams
 
 camera_bp = Blueprint('camera', __name__)
 
-def generate_frames(camera_id):
+def generate_frames(camera_id: int):
     while active_streams.get(camera_id, False):
         try:
             if camera_id not in cameras or not cameras[camera_id].cap.isOpened():
@@ -26,7 +26,8 @@ def generate_frames(camera_id):
 
 
 @camera_bp.route('/stream/<int:camera_id>')
-def stream(camera_id):
+def stream(camera_id: int) -> Response:
+    
     if camera_id not in cameras:
         cameras[camera_id] = Camera_USB(camera_id)
 
@@ -34,7 +35,8 @@ def stream(camera_id):
     return Response(generate_frames(camera_id), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @camera_bp.route('/release/<int:camera_id>', methods=['POST'])
-def release_camera(camera_id):
+def release_camera(camera_id: int) -> Response:
+
     if camera_id in cameras:
         active_streams[camera_id] = False  # Indicar que el stream debe detenerse
         cameras[camera_id].release()

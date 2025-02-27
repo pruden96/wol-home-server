@@ -1,11 +1,13 @@
-from flask import Blueprint, request, session, redirect, url_for, render_template, jsonify
+from flask import Blueprint, request, session, redirect, url_for, render_template, jsonify, Response
 from models import get_user_login
+
 
 auth_bp = Blueprint('auth', __name__)
 
 # Ruta para inicio de sesión (autenticación básica)
 @auth_bp.route('/login', methods=['GET', 'POST'])
-def login():
+def login() -> str | Response:
+
     if request.method == 'POST':
         data = request.get_json()
         if data is None:
@@ -24,9 +26,9 @@ def login():
     return render_template('login.html')
 
 @auth_bp.route('/logout', methods=['POST'])
-def logout():
+def logout() -> Response:
     if 'user_id' not in session:
-        return redirect(url_for('auth.login'))
+        return jsonify({"error": "No hay sesión activa"}), 401
     
     session.pop('user_id', None)
     session.clear()

@@ -3,12 +3,13 @@ import bcrypt
 import logging
 from config import Config
 
+
 # Configurar logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 DB_PATH = Config.DB_PATH
 
-def get_db_connection():
+def get_db_connection() -> sqlite3.Connection:
     """ Establish connection with SQLite3 DB"""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row  # Get the columns by name

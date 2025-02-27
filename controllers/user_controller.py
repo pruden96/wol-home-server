@@ -1,11 +1,12 @@
-from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, Response
 from models import insert_new_user, remove_user
 from validators.user_validators import validate_username, validate_email, is_username_taken, is_email_taken
 
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/register', methods=['GET', 'POST'])
-def register():
+def register() -> str | Response:
+   
     if 'user_id' not in session:
             return redirect(url_for('auth.login'))
         
@@ -39,7 +40,7 @@ def register():
             form_validation = False
         
         if not form_validation:
-            return render_template('register.html', error_user=error_user, error_email=error_email, error_pwd=error_pwd)
+            return render_template('register.html', error_user=error_user, error_email=error_email, error_pwd=error_pwd), 400
         
         if is_username_taken(username):
             error_user='Nombre de usuario en uso'
@@ -50,7 +51,7 @@ def register():
             db_validation = False
 
         if not db_validation:
-            return render_template('register.html', error_user=error_user, error_email=error_email, error_pwd='')
+            return render_template('register.html', error_user=error_user, error_email=error_email, error_pwd=''), 400
         
         insert_new_user(username, password, email)
 
