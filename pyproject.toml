@@ -1,0 +1,13 @@
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+# Configuración del formateador
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# Configuración del linter (corrige la advertencia)
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]  
+ignore = ["E501"]  

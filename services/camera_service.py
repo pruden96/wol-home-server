@@ -1,7 +1,8 @@
 import cv2
 
+
 class Camera_USB:
-    def __init__(self, camera_id: int=0) -> None:
+    def __init__(self, camera_id: int = 0) -> None:
         self.camera_id = camera_id
         self.cap = cv2.VideoCapture(self.camera_id)
 
@@ -9,11 +10,12 @@ class Camera_USB:
         success, frame = self.cap.read()
         if not success:
             return None
-        _, buffer = cv2.imencode('.jpg', frame)
+        _, buffer = cv2.imencode(".jpg", frame)
         return buffer.tobytes()
 
     def release(self) -> None:
         self.cap.release()
+
 
 cameras = {}
 
