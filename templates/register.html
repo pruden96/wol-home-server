@@ -1,28 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Usuario</title>
     <link rel="stylesheet" href="../static/styles.css">
 </head>
+
 <body>
+    <header>
+        <div class="header-container">
+            <div class="burguer-container">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <h2>Add New User</h2>
+        </div>
+    </header>
 
-    <h2>Agregar Usuario</h2>
+    <!-- Menú lateral -->
+    <nav class="sidebar">
+        <ul>
+            <li>
+                <a href="/">
+                    <button class="sidebar-button">⭐ Dashboard</button>
+            </li>
+            </a>
+            <li class="logout">
+                <button class="sidebar-button" id="logout-button">🚪 Cerrar Sesión</button>
+            </li>
+        </ul>
+    </nav>
 
-    <form id="add-user-form" method="POST">
-        <input type="text" id="reg-username" placeholder="Nombre de usuario" name="new-username" required>
-        <span id="new-username-error" style="color: red;">{{ error_user }}</span><br>
-        <input type="password" id="reg-pwd" placeholder="Password" name="new-pwd" required>
-        <input type="password" id="reg-conf-pwd" placeholder="Confirm Password" name="new-conf-pwd" required>
-        <span id="conf-pwd-error" style="color: red;">{{ error_pwd }}</span><br>
-        <input type="text" id="reg-email" placeholder="Email" name="new-email" required>
-        <span id="email-error" style="color: red;">{{ error_email }}</span><br>
-        <button type="submit">Agregar</button>
-    </form>
+    <main>
+        <div class="new-user-form-container">
+            <h2>Ingrese los datos del nuevo usuario</h2>
+            <form id="add-user-form" method="POST">
+                <input type="text" id="reg-username" placeholder="Nombre de usuario" name="new-username" required>
+                <span id="new-username-error" style="color: red;">{{ error_user }}</span><br>
+                <input type="password" id="reg-pwd" placeholder="Password" name="new-pwd" required>
+                <input type="password" id="reg-conf-pwd" placeholder="Confirm Password" name="new-conf-pwd" required>
+                <span id="conf-pwd-error" style="color: red;">{{ error_pwd }}</span><br>
+                <input type="email" id="reg-email" placeholder="Email" name="new-email" required>
+                <span id="email-error" style="color: red;">{{ error_email }}</span><br>
+                <button type="submit">Agregar</button>
+            </form>
+        </div>
+    </main>
 
-    <a href="/">Volver</a>
-
+    <footer class="floating-footer">
+        <a href="/" style="text-decoration: none;">
+            <button class="home-button">🏠</button>
+        </a>
+    </footer>
     <script type="module" src="../static/js/main.js"></script>
+    <script>
+        // Cerrar el menú si se hace clic fuera de él
+        document.addEventListener('click', function(event) {
+            // Cerrar la sidebar si se hace clic fuera de ella
+            const sidebar = document.querySelector(".sidebar");
+            const burgerContainer = document.querySelector(".burguer-container");
+
+            if (!event.target.closest('.sidebar') && !event.target.closest('.burguer-container')) {
+                sidebar.classList.remove("open"); // Cerrar la sidebar si se hace clic fuera de ella
+            }
+        });
+
+        const burgerContainer = document.querySelector('.burguer-container');
+        const sidebar = document.querySelector('.sidebar');
+
+        // Añade un evento de clic en la hamburguesa
+        burgerContainer.addEventListener('click', () => {
+            // Alterna la clase 'open' en la sidebar para abrirla o cerrarla
+            sidebar.classList.toggle('open');
+        });
+    </script>
 </body>
+
 </html>

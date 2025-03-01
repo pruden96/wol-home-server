@@ -1,59 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Control de Dispositivos</title>
-    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="stylesheet" href="../static/styles.css" />
 </head>
+
 <body>
-
-    <h2>Mis Dispositivos</h2>
-
-    <div id="device-list">
-        {% for device in devices %}
-        <div class="card" data-tag="{{ device.tag }}" data-name="{{ device.name }}">
-            <span class="card-name">{{ device.name }}</span>
-            <button class="options-btn" data-tag="{{ device.tag }}">⋮</button>
-            {% if device.type == 'wol'%}
-            <button class="wake-btn"
-                    data-tag="{{ device.tag }}"
-                    data-name="{{ device.name }}">
-                Encender
-            </button>
-            {% endif %}
-            {% if device.type == 'camera-usb' or device.type == 'camera'%}
-            <button class="play-btn"
-                    data-tag="{{ device.tag }}"
-                    data-name="{{ device.name }}"
-                    data-id="{{ device.ip }}">
-                ▶️ VER
-            </button>
-            {% endif %}
-            <button class="remove-device"
-                    id="delete-device"
-                    data-tag="{{ device.tag }}"
-                    data-name="{{ device.name }}">
-                ❌
-            </button>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div class="pop-up" id="pop-up-streaming" style="display: none;">
-        <div class="popup-content-container">
-            <h1 id="streaming-device"><!-- Se inserta desde main.js --></h1>
-            <img id="video-player" src="https://media.kasperskycontenthub.com/wp-content/uploads/sites/103/2021/10/14162918/rickroll-e1634243370645.jpg" width="640" height="480">
-            <div class="buttons-container" id="streaming-button-container">
-                <button id="close-streaming-btn">Cerrar</button>
+    <header>
+        <div class="header-container">
+            <div class="burguer-container">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+            <h2>My Devices</h2>
         </div>
-    </div>
+    </header>
 
-    <div class="pop-up" id="pop-up-name-edit" style="display: none;">
+    <!-- Menú lateral -->
+    <nav class="sidebar">
+        <ul>
+            {% if role == 'admin' %}
+            <li>
+                <a href="/register" class="add-user">
+                    <button class="sidebar-button">➕ Agregar Usuario</button>
+                </a>
+            </li>
+            {% endif %}
+            <li class="logout">
+                <button class="sidebar-button" id="logout-button">
+                    🚪 Cerrar Sesión
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="device-list">
+            {% for device in devices %}
+            <div class="card-container" data-tag="{{ device.tag }}" data-name="{{ device.name }}">
+                <div class="icon-container">
+                    <img src="../static/img/sun.png" alt="circle-light" />
+                </div>
+                <div class="card-elements-container">
+                    <div class="card-text-container">
+                        <h3 class="card-name">{{ device.name }}</h3>
+                    </div>
+                    <div class="action-button-container">
+                        <!-- <button class="action-button">ACTION</button> -->
+                        <!-- INSERTADO DESDE HTML LEGACY -->
+                        {% if device.type == 'wol'%}
+                        <button class="wake-btn"
+                                data-tag="{{ device.tag }}"
+                                data-name="{{ device.name }}">
+                            WAKE
+                        </button>
+                        {% endif %}
+                        {% if device.type == 'camera-usb' or device.type == 'camera'%}
+                        <button class="play-btn"
+                                data-tag="{{ device.tag }}"
+                                data-name="{{ device.name }}"
+                                data-id="{{ device.ip }}">
+                            ▶️ VER
+                        </button>
+                        {% endif %}
+                        <!-- FIN -->
+                    </div>
+                    <div class="options-button-container" onclick="toggleMenu(this)">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="device-menu-container">
+                        <button class="edit-name-button" data-tag="{{ device.tag }}">
+                            Editar Nombre
+                        </button>
+                        <button class="remove-device" data-tag="{{ device.tag }}" data-name="{{ device.name }}">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- PopUp's -->
+
+    <div class="pop-up" id="pop-up-name-edit" style="display: none">
         <div class="popup-content-container">
             <p>Inserte el nuevo nombre del dispositivo</p>
-            <input type="text" placeholder="Nuevo nombre del dispositivo" id="edited-name" required>
+            <input type="text" placeholder="Nuevo nombre del dispositivo" id="edited-name" required />
             <div class="buttons-container" id="buttons-name-edit-container">
                 <button id="save-name-btn">Guardar</button>
                 <button id="cancel-name-btn">Cancelar</button>
@@ -61,8 +101,9 @@
         </div>
     </div>
 
-    <div class="pop-up" id="pop-up-confirmacion" style="display: none;">
-        <div class="popup-content-container"> <!-- confirmation-popup-container -->
+    <div class="pop-up" id="pop-up-confirmacion" style="display: none">
+        <div class="popup-content-container">
+            <!-- confirmation-popup-container -->
             <p id="mensaje-confirmacion"><!-- Se inserta desde main.js --></p>
             <div class="buttons-container" id="confirmation-buttons-container">
                 <button id="boton-confirmar">Sí, eliminar</button>
@@ -71,12 +112,70 @@
         </div>
     </div>
 
-    <a href="/add_device" class="add-device">➕ Agregar Dispositivo</a>
-    {% if role == 'admin' %}
-    <a href="/register" class="add-user">➕ Agregar Usuario</a>
-    {% endif %}
-    <button id="logout-button">Cerrar Sesión</button>
+    <div class="pop-up" id="pop-up-streaming" style="display: none">
+        <div class="popup-content-container">
+            <h1 id="streaming-device"><!-- Se inserta desde main.js --></h1>
+            <img id="video-player"
+                src="https://media.kasperskycontenthub.com/wp-content/uploads/sites/103/2021/10/14162918/rickroll-e1634243370645.jpg"
+                width="640" height="480" />
+            <div class="buttons-container" id="streaming-button-container">
+                <button id="close-streaming-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Fin de los PopUp's -->
+    <footer class="floating-footer">
+        <a href="/add_device" class="add-device" style="text-decoration: none">
+            <button class="add-button">+</button>
+        </a>
+    </footer>
     <script type="module" src="../static/js/main.js"></script>
+    <script>
+        function toggleMenu(element) {
+            let card = element.closest('.card-container'); // Encuentra la card correspondiente
+            let menu = card.querySelector('.device-menu-container'); // Encuentra su menú
+
+            // Si el menú está abierto, lo cerramos
+            if (menu.style.right === '0px') {
+                menu.style.right = '-100%';
+            } else {
+                // Cerrar todos los menús antes de abrir el actual
+                document.querySelectorAll('.device-menu-container').forEach(m => {
+                    m.style.right = '-100%';
+                });
+
+                // Mostrar el menú de la card seleccionada
+                menu.style.right = '0px';
+            }
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.options-button-container') && !event.target.closest('.device-menu-container')) {
+                document.querySelectorAll('.device-menu-container').forEach(menu => {
+                    menu.style.right = '-100%'; // Ocultar todos los menús al hacer clic fuera
+                });
+            }
+
+            // Cerrar la sidebar si se hace clic fuera de ella
+            const sidebar = document.querySelector(".sidebar");
+            const burgerContainer = document.querySelector(".burguer-container");
+
+            if (!event.target.closest('.sidebar') && !event.target.closest('.burguer-container')) {
+                sidebar.classList.remove("open"); // Cerrar la sidebar si se hace clic fuera de ella
+            }
+        });
+
+        const burgerContainer = document.querySelector(".burguer-container");
+        const sidebar = document.querySelector(".sidebar");
+
+        // Añade un evento de clic en la hamburguesa
+        burgerContainer.addEventListener("click", () => {
+            // Alterna la clase 'open' en la sidebar para abrirla o cerrarla
+            sidebar.classList.toggle("open");
+        });
+    </script>
 </body>
+
 </html>

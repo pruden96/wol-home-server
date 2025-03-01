@@ -1,45 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Dispositivo</title>
     <link rel="stylesheet" href="../static/styles.css">
 </head>
+
 <body>
-
-    <h2>Agregar un Dispositivo</h2>
-
-    <form id="device-form">
-        <input type="text" id="device-name" placeholder="Nombre del dispositivo" name="name" value="{{ name if name is not none else '' }}" required>
-        <div id="mac-container">
-            <input type="text" id="device-mac" placeholder="MAC Address: XX:XX:XX:XX:XX:XX" name="mac" value="{{ mac if mac is not none else ''}}" required>
-            <span id="errorMAC" style="color: red;"></span><br><br>
+    <header>
+        <div class="header-container">
+            <div class="burguer-container">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <h2>Add New Device</h2>
         </div>
-        <div id="ip-container" style="display: none;">
-            <input type="text" id="device-ip" placeholder="IP Address: XXX.XXX.XXX.XXX" name="ip" value="{{ ip if ip is not none else ''}}" data-role="{{ role }}">
-            <span id="errorIP" style="color: red;"></span><br><br>
-        </div>
-        <input type="text" id="device-tag" placeholder="TAG" name="tag" required>
-        <div id="error-tag">
-            <span id="error-tag-text" style="color: red;"></span><br><br>
-        </div>
-        {% if role == 'admin' %}
-        <div id="type-container" style="display: block;">
-            <label for="device-type">Tipo de dispositivo</label>
-            <select id="device-type">
-                <option value="wol">Wake On LAN</option>
-                <option value="camera">Camera</option>
-                <option value="on-off">On - Off Device</option>
-                <option value="camera-usb">Camera USB</option>
-            </select>
-        </div>
-        {% endif %}
-        <button type="submit">Guardar</button>
-    </form>
+    </header>
 
-    <a href="/">Volver</a>
+    <!-- Menú lateral -->
+    <nav class="sidebar">
+        <ul>
+            <a href="/">
+                <button class="sidebar-button">⭐ Dashboard</button></li>
+            </a>
+            <li class="logout">
+                <button class="sidebar-button" id="logout-button">🚪 Cerrar Sesión</button>
+            </li>
+        </ul>
+    </nav>
 
+    <main>
+        <div class="device-form-container">
+            <h2>Ingrese los datos del dispositivo</h2>
+            <form id="device-form">
+                <input type="text" id="device-name" placeholder="Nombre del dispositivo" name="name"
+                    value="{{ name if name is not none else '' }}" required>
+                <div id="mac-container">
+                    <input type="text" id="device-mac" placeholder="MAC Address: XX:XX:XX:XX:XX:XX" name="mac"
+                        value="{{ mac if mac is not none else ''}}" required>
+                    <span id="errorMAC" style="color: red;"></span><br>
+                </div>
+                <div id="ip-container" style="display: block;">
+                    <input type="text" id="device-ip" placeholder="IP Address: XXX.XXX.XXX.XXX" name="ip"
+                        value="{{ ip if ip is not none else ''}}" data-role="{{ role }}">
+                    <span id="errorIP" style="color: red;"></span><br>
+                </div>
+                <input type="text" id="device-tag" placeholder="TAG" name="tag" required>
+                <div id="error-tag">
+                    <span id="error-tag-text" style="color: red;"></span><br>
+                </div>
+                {% if role == 'admin' %}
+                <div id="type-container" style="display: block;">
+                    <label for="device-type">Tipo de dispositivo</label>
+                    <select id="device-type">
+                        <option value="wol">Wake On LAN</option>
+                        <option value="camera">Camera</option>
+                        <option value="on-off">On - Off Device</option>
+                        <option value="camera-usb">Camera USB</option>
+                    </select>
+                </div>
+                {% endif %}
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="floating-footer">
+        <a href="/" style="text-decoration: none;">
+            <button class="home-button">🏠</button>
+        </a>
+    </footer>
     <script type="module" src="../static/js/main.js"></script>
+    <script>
+        // Cerrar el menú si se hace clic fuera de él
+        document.addEventListener('click', function(event) {
+            // Cerrar la sidebar si se hace clic fuera de ella
+            const sidebar = document.querySelector(".sidebar");
+            const burgerContainer = document.querySelector(".burguer-container");
+
+            if (!event.target.closest('.sidebar') && !event.target.closest('.burguer-container')) {
+                sidebar.classList.remove("open"); // Cerrar la sidebar si se hace clic fuera de ella
+            }
+        });
+
+        const burgerContainer = document.querySelector('.burguer-container');
+        const sidebar = document.querySelector('.sidebar');
+
+        // Añade un evento de clic en la hamburguesa
+        burgerContainer.addEventListener('click', () => {
+            // Alterna la clase 'open' en la sidebar para abrirla o cerrarla
+            sidebar.classList.toggle('open');
+        });
+    </script>
 </body>
+
 </html>

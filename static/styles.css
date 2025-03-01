@@ -1,207 +1,279 @@
-/* Estilo general */
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --gradient:
+      linear-gradient(
+        45deg,
+        #ff7c7d,
+        #ffda67
+      );
+    --card: #272524;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
+    font-family: 'Helvetica', sans-serif;
+    font-weight: 400;
+    background-color: #272524;
+}
+
+/* ESTILOS DEL HEADER FIJO */
+
+header {
+    width: 100%;
+    background: var(--card);
+    color: bisque;
+}
+
+.header-container {
+    position: fixed;
+    width: 100%; /* Ocupa todo el ancho */
+    height: 6vh;
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos */
+    margin: 0 auto; /* Centra horizontalmente el contenido interno */
+    padding: 0 20px; /* Espacio interno a los lados */
+    /* border: 3px solid bisque; */
+    /* border-radius: 7px; */
+    box-shadow: 0 4px 10px rgba(233, 228, 228, 0.3);
+    top: 10px; left: 0; right: 0;
+    z-index: 500;
+}
+
+.header-container h2 {
+    margin: 0; /* Elimina el margen predeterminado del h2 */
+    position: absolute; /* Posiciona el h2 absolutamente */
+    left: 50%; /* Lo mueve al 50% del ancho del contenedor */
+    transform: translateX(-50%);
+}
+
+.burguer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 20px; /* Ajusta la altura según necesites */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+}
+
+.burguer-container span {
+    display: block;
+    width: 25px; /* Ancho de las líneas de la hamburguesa */
+    height: 2px; /* Grosor de las líneas */
+    /* background-color: bisque; Color de las líneas */
+    background: linear-gradient(to right, #a8ff78, #78ffd6);
+}
+
+/* ESTILOS DEL CUERPO (DISPOSITIVOS) */
+
+main {
+    width: 100%;
+    padding-top: 10vh;
+}
+
+.card-container {
+    display: flex;
+    margin: 10px auto;
+    flex-direction: row;
+    background: #1E1E1E;
+    border-radius: 20px;
+    padding: 15px;
+    width: 100%;
+    height: 15vh;
+    box-shadow: 0 4px 10px rgba(233, 228, 228, 0.3);
+    overflow: hidden;
+    position: relative;
+    align-items: center;
+}
+
+.icon-container {
+    /*width: 100%;*/
+    width: 10vh;
+    height: 10vh;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+
+.icon-container img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.card-elements-container {
+    position: relative;
+    height: 100%;
+    color: bisque;
+    /* justify-content: center; /*Centra verticalmente */
+    /* align-items: center; /*Centra horizontalmente */
+    flex-grow: 1; /* Ocupa todo el espacio restante */
+    /* border: 3px solid bisque; */
+}
+
+.card-text-container {
+    position: absolute;
+    top: 0; /* Pegado al tope */
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
+    width: 100%;
+}
+
+.card-text-container h3 {
     margin: 0;
     padding: 0;
 }
 
-/* Encabezados */
-h1, h2 {
-    color: #ffffff;
+.action-button-container {
+    position: absolute;
+    bottom: 0; /* Pegado al bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
 }
 
-/* Tarjetas */
-.card {
-    width: 90%;
-    margin: 10px auto;
-    background-color: #1e1e1e;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+.options-button-container {
+    position: absolute;
+    top: 50%;
+    right: 0; /* Pegado a la derecha */
+    transform: translateY(-50%); /* Centrar verticalmente */
     display: flex;
-    justify-content: space-between;
+    flex-direction: column; /* Colocar los puntos en columna */
+    align-items: center; /* Centrar los puntos horizontalmente */
+    gap: 5px; /* Espaciado entre puntos */
+    width: 30px; /* Tamaño del contenedor */
+    height: auto;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.options-button-container span {
+    display: block;
+    width: 8px; /* Tamaño del punto */
+    height: 8px; /* Tamaño del punto */
+    background-color: bisque; /* Color de los puntos */
+    border-radius: 50%; /* Hace que sean círculos */
+}
+
+.action-button-container button, .buttons-container button, .device-form-container button, .new-user-form-container button {
+    padding: 5px 35px; /* Ajusta el padding según necesites */
+    border: 2px solid bisque; /* Contorno bisque */
+    border-radius: 20px; /* Contorno redondeado */
+    background-color: transparent; /* Fondo transparente */
+    color: bisque; /* Color de las letras bisque */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease, transform 0.1s ease; /* Transición suave para el fondo y la transformación */
+}
+
+.device-form-container button, .new-user-form-container button {
+    padding: 15px 35px; /* Ajusta el padding según necesites */
+    font-size: large;
+}
+
+.action-button-container button:hover, .buttons-container button:hover {
+    background: linear-gradient(to right, #a8ff78, #78ffd6); /* Gradiente verde al pasar el mouse */
+    color: #272524; /* Cambia el color del texto para mejor contraste */
+    border: none;
+}
+
+.action-button-container button:active {
+    transform: scale(1.1); /* Efecto de resonancia al hacer clic */
+    transition: transform 0.1s ease; /* Transición más rápida para el efecto de clic */
+}
+
+.device-menu-container {
+    position: absolute;
+    top: 0;
+    right: -100%; /* Oculto inicialmente */
+    width: 100%;
+    height: 100%;
+    background: #1E1E1E;;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    justify-content: center;
+    gap: 10px;
+    transition: right 0.3s ease-in-out;
+    z-index: 1; /* Debajo de los tres puntos */
 }
 
-.card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.15);
-}
-
-.card-name {
-    flex: 1;
-    text-align: left;
-    font-size: 18px;
-    font-weight: bold;
-    color: #e0e0e0;
-}
-.remove-device {
-    background-color: #0c4acf;
-    color: #ffffff;
+.edit-name-button, .remove-device {
     border: none;
-    padding: 10px 15px;
+    background: #333;
+    color: bisque;
+    padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s ease;
-    width: 15%;
-
-}
-/* Botón "Encender" */
-.wake-btn, .play-btn {
-    background-color: #00c853;
-    color: #ffffff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s ease;
     width: 60%;
 }
 
-.options-btn {
-    color: #ffffff;
-    background-color: rgba(255, 0, 0, 0);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 10px;
-    margin-right: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s ease;
-    width: 1%;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
+.edit-name-button:hover, .remove-device:hover {
+    background: bisque;
+    color: #333;
+    transform: scale(1.1); /* Efecto de resonancia al hacer clic */
+    transition: transform 0.1s ease; /* Transición más rápida para el efecto de clic */
 }
 
-.card button:last-child {
-    margin-left: 20px; /* Espacio a la izquierda del segundo botón */
-  }
+/* FOOTER FLOTANTE */
 
-.wake-btn:hover {
-    background-color: #00e676;
+.floating-footer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
 }
 
-.play-btn:hover {
-    background-color: #00e676;
-}
-
-
-/* Formularios */
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch; /* Estirar los elementos al ancho del contenedor */
-    margin-top: 20px;
-}
-
-input, select, button {
-    width: 100%; /* Ocupar todo el ancho del contenedor */
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #444;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    box-sizing: border-box; /* Incluir el padding y el border en el ancho */
-}
-
-input::placeholder {
-    color: #bbb;
-}
-
-button {
-    background-color: #3a46ebea;
-    color: white;
-    cursor: pointer;
-    border: none;
-    transition: background 0.2s ease;
-}
-
-button:hover {
-    background-color: #1f5ca2;
-}
-
-/* Botón de agregar dispositivos */
-.add-device, .add-user {
-    display: block;
-    margin: 20px auto;
-    font-size: 24px;
-    text-decoration: none;
-    color: #00e676;
+.add-button {
+    width: 50px;
+    height: 50px;
+    background-color: bisque;
+    color: #1a1a1a;
+    font-size: 32px;
     font-weight: bold;
-}
-
-.add-device:hover {
-    color: #69f0ae;
-}
-
-/* Contenedor de login */
-.login-container {
-    width: 80%;
-    max-width: 400px;
-    margin: 50px auto;
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-}
-
-.login-container h2 {
-    color: #ffffff;
-}
-
-/* Botón de cerrar sesión */
-button.logout {
-    background-color: #d32f2f;
-}
-
-button.logout:hover {
-    background-color: #f44336;
-}
-
-.password-container {
-    position: relative;
+    border: none;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    width: 100%; /* Ocupar todo el ancho del contenedor del formulario */
-}
-
-.password-container input {
-    width: 100%; /* Ocupar todo el ancho del contenedor */
-    padding-right: 30px; /* Espacio para el icono y un poco más */
-    box-sizing: border-box; /* Incluir el padding y el border en el ancho */
-}
-
-.toggle-password {
-    position: absolute;
-    right: 10px;
+    justify-content: center;
     cursor: pointer;
-    font-size: 18px;
-    color: gray;
-    transition: color 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.toggle-password:hover {
-    color: black;
+.home-button {
+    width: 50px;
+    height: 50px;
+    background-color: #3498db; /* Un color azul llamativo para el botón */
+    color: white; /* Color blanco para el icono */
+    font-size: 24px; /* Tamaño del icono */
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    line-height: 1; /* Ajuste para centrar el icono verticalmente */
 }
 
-.contenedor-boton-eliminar {
-    position: relative;
-  }
-
-button#delete-device {
-    display: flex; /* Convierte el botón en flexbox */
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
+.add-button:hover, .burguer-container:hover, .home-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.4);
 }
-  
-/* Corrección del pop-up */
+
+.add-button:active {
+    transform: scale(0.9);
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+
+/* POP-UPs */
+
 .pop-up {
     position: fixed; /* Para evitar que se mueva con el contenido */
     top: 50%;
@@ -247,16 +319,28 @@ button#delete-device {
     flex-direction: column;
 }
 
-#buttons-name-edit-container button, #confirmation-buttons-container button {
-    width: 200px; /* Mismo ancho para ambos botones */
-    text-align: center;
-    display: block;
-    margin: 5px 0; /* Espaciado uniforme entre los botones */
+input, select {
+    width: 100%; /* Ocupar todo el ancho del contenedor */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    box-sizing: border-box; /* Incluir el padding y el border en el ancho */
 }
 
-#buttons-name-edit-container button:hover, #confirmation-buttons-container button:hover {
-    background-color: #777;
+input::placeholder {
+    color: #bbb;
 }
+
+/* POP-UP DE CAMBIO DE NOMBRE */
+
+.popup-content-container p {
+    color: bisque;
+}
+
+/* POP-IP DE VIDEO */
 
 #video-player {
     width: 90%; /* Ocupa el 90% del contenedor */
@@ -264,5 +348,76 @@ button#delete-device {
     height: auto; /* Mantiene la proporción */
     display: block; /* Elimina espacios extra en imágenes */
     margin: 0 auto; /* Centra horizontalmente */
+    border-radius: 15px;
 }
 
+/* MENÚ LATERAL (SIDEBAR) */
+
+.sidebar {
+    position: fixed;
+    top: 7.5vh;
+    left: -250px; /* Oculto inicialmente */
+    width: 250px;
+    height: 100%;
+    background-color: #1a1a1a;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    transition: left 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    z-index: 1000;
+}
+
+/* Cuando el menú está abierto */
+.sidebar.open {
+    left: 0;
+}
+
+/* Lista del menú */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* flex-grow: 1; */
+}
+
+/* Botones del menú */
+.sidebar-button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background-color: transparent;
+    color: bisque;
+    border: 1px solid bisque;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 15px;
+    transition: background 0.2s ease-in-out;
+}
+
+.sidebar-button:hover {
+    background-color: #464543;
+}
+
+/* Cerrar sesión abajo */
+.logout {
+    margin-top: auto;
+}
+
+/* Formularios */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Estirar los elementos al ancho del contenedor */
+    margin-top: 20px;
+}
+
+.device-form-container, .new-user-form-container {
+    text-align: center;
+}
+
+.device-form-container h2, .new-user-form-container h2{
+    color: bisque;
+}
