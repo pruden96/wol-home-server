@@ -2,12 +2,13 @@ from flask import (
     Blueprint,
     Response,
     jsonify,
+    make_response,
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 
 from models import (
     get_device_ip,
@@ -24,26 +25,31 @@ device_bp = Blueprint("device", __name__)
 
 # Ruta para dashboard
 @device_bp.route("/")
+@jwt_required()
 def dashboard() -> str:
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
-
-    user_id = session["user_id"]
-    user_role = session["role"]
+    user_id = get_jwt_identity()  # Obtiene el user_id
+    user_role = get_jwt()["role"] # Obtiene el role desde los claims (payload)
     devices = get_devices_by_userid(user_id)
-    return render_template("index.html", devices=devices, role=user_role)
+    response = make_response(render_template("index.html", devices=devices, role=user_role))
+
+    # Deshabilitar la caché para evitar que el navegador almacene esta página
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, proxy-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
+    # return render_template("index.html", devices=devices, role=user_role)
 
 
 # Ruta para agregar un dispositivo
 @device_bp.route("/add_device", methods=["GET", "POST"])
+@jwt_required()
 def add_device() -> str | Response:
     name = None
     mac = None
     ip = None
 
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
-    user_role = session["role"]
+    user_role = get_jwt()["role"] # Obtiene el role desde los claims (payload)
 
     if request.method == "POST":
         data = request.get_json()
@@ -59,7 +65,7 @@ def add_device() -> str | Response:
         if ip == "none":
             ip = None
         type = data.get("type")
-        user_id = session["user_id"]
+        user_id = get_jwt_identity()  # Obtiene el user_id
 
         tag_fetched = get_device_tag(tag)
         # Verificar que el tag esté permitido (debe ser uno de los tags predefinidos)
@@ -85,10 +91,8 @@ def add_device() -> str | Response:
 
 
 @device_bp.route("/remove_device", methods=["DELETE"])
+@jwt_required()
 def remove_device() -> Response:
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
-
     name = request.args.get("name")
     tag = request.args.get("tag")
     if name is None or tag is None:
@@ -99,10 +103,8 @@ def remove_device() -> Response:
 
 
 @device_bp.route("/update_device_name", methods=["PUT"])
+@jwt_required()
 def update_device_name() -> Response:
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
-
     data = request.get_json()
     if data is None:
         return jsonify({"error": "No se proporcionaron datos JSON"}), 400

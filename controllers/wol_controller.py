@@ -1,4 +1,5 @@
-from flask import Blueprint, Response, jsonify, redirect, request, session, url_for
+from flask import Blueprint, Response, jsonify, request
+from flask_jwt_extended import jwt_required
 from wakeonlan import send_magic_packet
 
 from models import get_mac_by_tag
@@ -7,13 +8,8 @@ wol_bp = Blueprint("wol", __name__)
 
 
 @wol_bp.route("/wake", methods=["POST"])
+@jwt_required()
 def wake() -> Response:
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
-    # auth = request.args.get("auth")
-    # if auth != AUTH_KEY:
-    #     return jsonify({"status": "error", "message": "Autenticación fallida"}), 403
-
     device = request.args.get("tag")
     if not device:
         return jsonify(

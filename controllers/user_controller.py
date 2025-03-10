@@ -4,9 +4,9 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
+from flask_jwt_extended import get_jwt, jwt_required
 
 from models import insert_new_user
 from validators.user_validators import (
@@ -20,11 +20,11 @@ user_bp = Blueprint("user", __name__)
 
 
 @user_bp.route("/register", methods=["GET", "POST"])
+@jwt_required()
 def register() -> str | Response:
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
+    user_role = get_jwt()["role"] # Obtiene el role desde los claims (payload)
 
-    if session["role"] != "admin":
+    if user_role != "admin":
         return redirect(url_for("device.dashboard"))
 
     if request.method == "POST":

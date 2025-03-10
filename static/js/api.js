@@ -21,7 +21,7 @@ async function login({ username, password }) {
             return;
         }
 
-        const data = await handleResponse(response);
+        await handleResponse(response);
     } catch (error) {
         throw error;
     }

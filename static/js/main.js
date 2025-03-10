@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       try {
         await login(loginData);
+        loginForm.reset();
       } catch (error) {
         if (error.error_auth) {
           alert("Error de autenticación: " + error.error_auth);

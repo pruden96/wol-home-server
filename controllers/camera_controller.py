@@ -1,4 +1,5 @@
 from flask import Blueprint, Response
+from flask_jwt_extended import jwt_required
 
 from services.camera_service import Camera_USB, active_streams, cameras
 
@@ -27,6 +28,7 @@ def generate_frames(camera_id: int):
 
 
 @camera_bp.route("/stream/<int:camera_id>")
+@jwt_required()
 def stream(camera_id: int) -> Response:
     if camera_id not in cameras:
         cameras[camera_id] = Camera_USB(camera_id)
@@ -38,6 +40,7 @@ def stream(camera_id: int) -> Response:
 
 
 @camera_bp.route("/release/<int:camera_id>", methods=["POST"])
+@jwt_required()
 def release_camera(camera_id: int) -> Response:
     if camera_id in cameras:
         active_streams[camera_id] = False  # Indicar que el stream debe detenerse
