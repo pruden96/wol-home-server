@@ -28,14 +28,18 @@ device_bp = Blueprint("device", __name__)
 @jwt_required()
 def dashboard() -> str:
     user_id = get_jwt_identity()  # Obtiene el user_id
-    user_role = get_jwt()["role"] # Obtiene el role desde los claims (payload)
+    user_role = get_jwt()["role"]  # Obtiene el role desde los claims (payload)
     devices = get_devices_by_userid(user_id)
-    response = make_response(render_template("index.html", devices=devices, role=user_role))
+    response = make_response(
+        render_template("index.html", devices=devices, role=user_role)
+    )
 
     # Deshabilitar la caché para evitar que el navegador almacene esta página
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, proxy-revalidate'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
+    response.headers["Cache-Control"] = (
+        "no-store, no-cache, must-revalidate, proxy-revalidate"
+    )
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
 
     return response
     # return render_template("index.html", devices=devices, role=user_role)
@@ -49,7 +53,7 @@ def add_device() -> str | Response:
     mac = None
     ip = None
 
-    user_role = get_jwt()["role"] # Obtiene el role desde los claims (payload)
+    user_role = get_jwt()["role"]  # Obtiene el role desde los claims (payload)
 
     if request.method == "POST":
         data = request.get_json()

@@ -22,7 +22,7 @@ user_bp = Blueprint("user", __name__)
 @user_bp.route("/register", methods=["GET", "POST"])
 @jwt_required()
 def register() -> str | Response:
-    user_role = get_jwt()["role"] # Obtiene el role desde los claims (payload)
+    user_role = get_jwt()["role"]  # Obtiene el role desde los claims (payload)
 
     if user_role != "admin":
         return redirect(url_for("device.dashboard"))

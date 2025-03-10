@@ -24,10 +24,13 @@ from models import get_user_login
 
 auth_bp = Blueprint("auth", __name__)
 
+
 def current_user_is_authenticated():
     try:
         verify_jwt_in_request()
-        user_identity = get_jwt_identity()  # Devuelve la identidad del payload del JWT  # noqa: F841
+        user_identity = (
+            get_jwt_identity()
+        )  # Devuelve la identidad del payload del JWT  # noqa: F841
         return True
     except Exception:
         # print(e)
@@ -63,10 +66,12 @@ def login() -> str | Response:
             access_token = create_access_token(
                 identity=identity,  # Usamos el user_id como identidad
                 expires_delta=timedelta(hours=1),  # Expira en 1 hora
-                additional_claims={"role": user["role"]}  # Agregamos el rol al payload
+                additional_claims={"role": user["role"]},  # Agregamos el rol al payload
             )
 
-            response = make_response(redirect(url_for("device.dashboard")))  # Crear respuesta HTTP
+            response = make_response(
+                redirect(url_for("device.dashboard"))
+            )  # Crear respuesta HTTP
             set_access_cookies(response, access_token)  # Almacena el token en la cookie
 
             return response  # Retorna la respuesta con la cookie configurada
@@ -76,9 +81,11 @@ def login() -> str | Response:
     response = make_response(render_template("login.html"))
 
     # Deshabilitar la caché para evitar que el navegador almacene esta página
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, proxy-revalidate'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
+    response.headers["Cache-Control"] = (
+        "no-store, no-cache, must-revalidate, proxy-revalidate"
+    )
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
 
     return response
 
