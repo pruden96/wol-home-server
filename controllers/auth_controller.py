@@ -28,9 +28,9 @@ auth_bp = Blueprint("auth", __name__)
 def current_user_is_authenticated():
     try:
         verify_jwt_in_request()
-        user_identity = (
+        user_identity = (  # noqa: F841
             get_jwt_identity()
-        )  # Devuelve la identidad del payload del JWT  # noqa: F841
+        )  # Devuelve la identidad del payload del JWT
         return True
     except Exception:
         # print(e)
