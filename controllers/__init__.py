@@ -3,6 +3,7 @@ import os
 import sys
 
 from flask import Flask, redirect, url_for
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
@@ -20,23 +21,26 @@ from config import Config
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="../static", template_folder="../templates")
     app.secret_key = Config.SECRET_KEY  # Cargar la clave secreta desde config.py
+    CORS(app, supports_credentials=True)  # Permite cookies en solicitudes POST
 
     # Configuración de JWT con cookies HTTP-Only
     app.config["JWT_SECRET_KEY"] = Config.SECRET_KEY  # Clave secreta
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]  # Almacenar JWT en cookies
-    app.config["JWT_COOKIE_SECURE"] = False  # False en dev (True en prod con HTTPS)
-    app.config["JWT_COOKIE_HTTPONLY"] = True  # No accesible por JS (protección XSS)
-    app.config["JWT_COOKIE_SAMESITE"] = "Strict"  # Evita ataques CSRF
+    app.config["JWT_ACCESS_COOKIE_NAME"] = "access_token"  # Nombre de la cookie
+    app.config["JWT_COOKIE_SECURE"] = False  # En local, debe ser False
+    app.config["JWT_COOKIE_CSRF_PROTECT"] = False  # Para pruebas, desactivar CSRF
 
-    jwt = JWTManager(app)  # Inicializar JWTManager
+    jwt = JWTManager(app)  # Inicializar JWTManager  # noqa: F841
 
     # Manejar errores de autenticación
     @jwt.unauthorized_loader
     def unauthorized_callback(callback):
+        print("Unauthorized callback")
         return redirect(url_for("auth.login"))  # Redirige a login si no hay token
 
-    @jwt.expired_token_loader
+    # @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
+        print("Expired token callback")
         return redirect(url_for("auth.login"))  # Redirige a login si el token expiró
 
     # Registrar Blueprints

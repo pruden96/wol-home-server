@@ -27,7 +27,7 @@ def generate_frames(camera_id: int):
     print(f"Finalizando transmisión de cámara {camera_id}.")
 
 
-@camera_bp.route("/stream/<int:camera_id>")
+@camera_bp.route("/stream/<int:camera_id>", methods=["GET"])
 @jwt_required()
 def stream(camera_id: int) -> Response:
     if camera_id not in cameras:
