@@ -31,53 +31,58 @@ def current_user_is_authenticated():
     except Exception:
         return False  # Token inválido o expirado
 
+@auth_bp.route("/login", methods=["GET"])
+def render_login():
+    if current_user_is_authenticated(): # Si el usuario ya tiene un JWT válido
+        return redirect(url_for("device.dashboard"))
+    response = make_response(render_template("login.html"))
+    # Control de caché para no almacenar la página de login
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 # Ruta para inicio de sesión
-@auth_bp.route("/login", methods=["GET", "POST"])
+@auth_bp.route("/login", methods=["POST"])
 def login() -> str | Response:
-    if current_user_is_authenticated():  # Si el usuario ya tiene un JWT válido
-        return redirect(url_for("device.dashboard"))
+    data = request.get_json()
+    if data is None:
+        return jsonify({"error": "No se proporcionaron datos JSON"}), 400
 
-    if request.method == "POST":
-        data = request.get_json()
-        if data is None:
-            return jsonify({"error": "No se proporcionaron datos JSON"}), 400
+    username = data.get("username")
+    password = data.get("password")
 
-        username = data.get("username")
-        password = data.get("password")
-
-        user = get_user_login(username, password)
-        if user:
-            # Crea el token con los detalles del usuario como parte del payload
-            access_token = create_access_token(
-                identity=str(
-                    user["id"]
-                ),  # Usamos el user_id como identidad, debe ser string
-                expires_delta=timedelta(hours=1),  # Expira en 1 hora
-                additional_claims={"role": user["role"]},  # Agregamos el rol al payload
+    user = get_user_login(username, password)
+    if user:
+        # Crea el token con los detalles del usuario como parte del payload
+        access_token = create_access_token(
+            identity=str(
+                user["id"] # Usamos el user_id como identidad, debe ser string
+            ),
+            expires_delta=timedelta(hours=1),  # Expira en 1 hora
+            additional_claims={"role": user["role"]},  # Agregamos el rol al payload
+        )
+        print("Log in correcto")
+        response = make_response(
+            jsonify(
+                {
+                    "message": "Login exitoso",
+                    "redirect_url": url_for("device.dashboard"),
+                }
             )
-            print("Log in correcto")
-            response = make_response(
-                jsonify(
-                    {
-                        "message": "Login exitoso",
-                        "redirect_url": url_for("device.dashboard"),
-                    }
-                )
-            )
-            response.set_cookie(
-                "access_token",
-                access_token,
-                httponly=True,
-                secure=False,
-                samesite="Lax",
-            )
+        )
+        response.status_code = 200
+        response.set_cookie(
+            "access_token",
+            access_token,
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+        )
 
-            return response
-        else:
-            return jsonify({"error_auth": "Credenciales incorrectas"}), 401
-
-    return render_template("login.html")
+        return response
+    else:
+        return jsonify({"error_auth": "Credenciales incorrectas"}), 401
 
 
 @auth_bp.route("/logout", methods=["POST"])

@@ -38,7 +38,7 @@ def create_app() -> Flask:
         print("Unauthorized callback")
         return redirect(url_for("auth.login"))  # Redirige a login si no hay token
 
-    # @jwt.expired_token_loader
+    @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
         print("Expired token callback")
         return redirect(url_for("auth.login"))  # Redirige a login si el token expiró
