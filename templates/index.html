@@ -42,8 +42,11 @@
         <div id="device-list">
             {% for device in devices %}
             <div class="card-container" data-tag="{{ device.tag }}" data-name="{{ device.name }}">
-                <div class="icon-container">
-                    <img src="../static/img/sun.png" alt="circle-light" />
+                <div class="icon-container active">
+                    <img
+                        src="{%if device.type == 'camera-usb'%}../static/img/camera.png{% else %}../static/img/sun.png{% endif %}"
+                        alt="circle-light"
+                    />
                 </div>
                 <div class="card-elements-container">
                     <div class="card-text-container">

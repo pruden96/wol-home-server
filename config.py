@@ -1,4 +1,5 @@
 import os
+import platform
 
 from dotenv import load_dotenv
 
@@ -13,3 +14,4 @@ class Config:
     ADMIN_USER = os.getenv("ADMIN_USER")
     ADMIN_AUTH = os.getenv("ADMIN_AUTH")
     ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
+    PING_PARAM = '-n' if platform.system().lower() == 'windows' else '-c'

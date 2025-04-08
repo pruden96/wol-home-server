@@ -154,6 +154,24 @@ async function stopStreaming(deviceId) {
     }
 }
 
+// Solicitud para obtener el estado de cada dispositivo WoL
+async function getDeviceStatus() {
+    try {
+        const response = await fetch("/device-status", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const data = await handleResponse(response);
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export {
     login,
     addDevice,
@@ -162,4 +180,5 @@ export {
     removeDevice,
     updateDeviceName,
     stopStreaming,
+    getDeviceStatus,
 };

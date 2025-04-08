@@ -90,17 +90,27 @@ main {
     /*width: 100%;*/
     width: 10vh;
     height: 10vh;
-    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    /* background: linear-gradient(135deg, #ff7e5f, #feb47b); */
+    /* background: linear-gradient(135deg, #3a3939, #cfccca); */
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 15px;
+    transition: background 0.3s ease-in-out; /* Suaviza el cambio de color */
+}
+
+.icon-container.active {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+}
+
+.icon-container.inactive {
+    background: linear-gradient(135deg, #3a3939, #cfccca);
 }
 
 .icon-container img {
     width: 70px;
     height: 70px;
-    border-radius: 50%;
+    border-radius: 10%;
     object-fit: cover;
 }
 

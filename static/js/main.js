@@ -5,9 +5,68 @@ import {
     removeDevice,
     updateDeviceName,
     stopStreaming,
+    getDeviceStatus,
 } from "./api.js";
 
+// Función asíncrona para obtener feedback de encendido de los dispositivos WoL
+async function updateDeviceStatus() {
+    try {
+        const response = await getDeviceStatus();
+        if (Object.keys(response).length === 0) return;
+        document.querySelectorAll(".card-container").forEach((card) => {
+            const tag = card.getAttribute("data-tag");
+            if (!tag || !(tag in response)) return; // Si no hay tag o no está en la respuesta, continuar
+
+            const status = response[tag];
+            const iconContainer = card.querySelector(".icon-container");
+
+            if (status) {
+                iconContainer.classList.add("active");
+                iconContainer.classList.remove("inactive");
+            } else {
+                iconContainer.classList.add("inactive");
+                iconContainer.classList.remove("active");
+            }
+        });
+    } catch (error) {
+        console.error("Error al obtener el estado del dispositivo:", error);
+    }
+}
+
+let intervalId;
+function startInterval() {
+    if (!intervalId) {
+        updateDeviceStatus();
+        intervalId = setInterval(updateDeviceStatus, 3000);
+    }
+}
+
+function stopInterval() {
+    if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
+    // Verificar que la página sea el dashboard
+    if (
+        window.location.pathname == "/" ||
+        window.location.pathname.includes("index.html")
+    ) {
+        // Llamar a la función periódicamente
+        startInterval();
+        document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "visible") {
+                startInterval();
+            } else {
+                stopInterval();
+            }
+        });
+    } else {
+        stopInterval();
+    }
+
     // onSubmit event to handling POST on add_device
     const deviceForm = document.getElementById("device-form");
     if (deviceForm) {

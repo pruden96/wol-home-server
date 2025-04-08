@@ -205,7 +205,7 @@ def get_device_mac(mac: str, user_id: int) -> str:
 
 
 def get_device_ip(ip: str, user_id: int) -> str:
-    """Get device IP address"""
+    """Get device IP address from a specified user"""
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
@@ -213,5 +213,17 @@ def get_device_ip(ip: str, user_id: int) -> str:
                 "SELECT ip FROM devices WHERE ip = ? and user_id = ?", (ip, user_id)
             ).fetchone()
             return device_ip[0] if device_ip else None
+    except sqlite3.Error as e:
+        logging.error(f"Database error: {e}")
+
+def get_device_by_tag(tag: str) -> tuple:
+    """Get device by tag"""
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            result = cursor.execute(
+                "SELECT * FROM devices WHERE tag = ?", (tag,)
+            ).fetchone()
+            return result if result else None
     except sqlite3.Error as e:
         logging.error(f"Database error: {e}")

@@ -1,3 +1,6 @@
+import os
+import sys
+
 from flask import (
     Blueprint,
     Response,
@@ -19,7 +22,12 @@ from models import (
     update_device_name_by_tag,
 )
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from config import Config
+
 device_bp = Blueprint("device", __name__)
+PING_PARAM = Config.PING_PARAM
 
 
 # Ruta GET para renderizar el dashboard
@@ -111,3 +119,38 @@ def update_device_name() -> Response:
     # print(f"Name: {name}, Tag: {tag}")
     update_device_name_by_tag(tag, name)
     return jsonify({"success": True}), 200
+
+def can_ping(ip_address: str) -> bool:
+    """
+    Intenta hacer ping a una dirección IP.
+
+    Args:
+        ip_address (str): La dirección IP a la que hacer ping.
+
+    Returns:
+        bool: True si el ping es exitoso, False en caso contrario.
+    """
+    import subprocess
+
+    command = ['ping', PING_PARAM, '1', ip_address]
+
+    try:
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2)
+        return result.returncode == 0
+    except subprocess.TimeoutExpired:
+        return False
+    except subprocess.CalledProcessError:
+        return False
+    except OSError as e:
+        print(f"Error al ejecutar el comando ping: {e}")
+        return False
+
+# Ruta GET para obtener el estado [ON-OFF] de un dispositivo WoL
+@device_bp.route("/device-status", methods=["GET"])
+@jwt_required()
+def ping_device() -> Response:
+    user_id = get_jwt_identity()
+    devices = get_devices_by_userid(user_id)
+    response = { device["tag"]: can_ping(device["ip"]) for device in devices if device["ip"] and device["type"] == "wol" }
+    print(response)
+    return jsonify(response), 200
